@@ -2,7 +2,7 @@
 console.log("Loading library.js")
 
 // the main functions that will be used for animations
-function animationClosure(attributeSet, FDSet) {
+function animationClosure(attributeSet, FDSet, speed) {
     console.log("function animationClosure is being called")
 
     let closureArr = [] // the array that will store the closures 
@@ -10,7 +10,7 @@ function animationClosure(attributeSet, FDSet) {
 
     displayAttributeSet(attributeSet)
     displayFDSet(FDSet)
-    findClosure(attributeSet, FDSet, closureArr)
+    findClosure(attributeSet, FDSet, closureArr, speed)
 
 }
 
@@ -90,7 +90,10 @@ function displayAttributeSet(attributeSet) {
 //        attributeSet -> a string for which you want to find the closure for
 //        closureArr -> initially empty, used to store the closure for attributeSet
 // return: the closure for attributeSet
-async function findClosure(attributeSet, FDSet, closureArr) {
+async function findClosure(attributeSet, FDSet, closureArr, speed) {
+
+    // indicates whether an FD has been successfully checked or not
+    const doneArr = Array(FDSet.length).fill(false)
 
     // initialize Y+ to Y
     const originalAttr = attributeSet.split('')
@@ -111,77 +114,117 @@ async function findClosure(attributeSet, FDSet, closureArr) {
     // initially, show that you initialize Y+ to Y 
     const closureSpans = document.querySelectorAll("[id^='closure']")
     closureSpans.forEach(closureSpan => {
-        closureSpan.classList.add('fadeIn')
+        closureSpan.style.animation = `fadeIn ${speed}ms linear forwards`
+        closureSpan.speed = speed
         closureSpan.addEventListener("webkitAnimationEnd", fadeAnimationEnd) // remove class when animation is done
     })
 
-    await timer(3000) // the initial fadeIn effect of Y+ (Y at this moment)
+    await timer(3 * speed) // the initial fadeIn effect of Y+ (Y at this moment)
 
     let count = 0;
+    let repeat = [true, true]; // first index is true if something can be checked again, second index is true if repeat[0] is true and if an attr. has been added to the closure
 
-    while (count < FDSet.length) {
+    // loop while the FDSet still has some FD that's not been checked, or if need to check again because some new closure might have been added through previous FD's
+    // you don't want to loop over again if the last FD cannot be added, and all the ones before it was successful 
+    while (doneArr.includes(false) && repeat[0] == repeat[1] && repeat[0]) {
 
-        // moving one FD to the left at a time 
-        const FDToMove = document.querySelector('#FDList' + count)
-        FDToMove.style.animation = "moveFD 2s linear forwards"
-        await timer(2000)
+        repeat = [false, false]
+        count = 0
 
-        const FDSplit = FDSet[count].split('->')
-        const LHS = FDSplit[0]
-        const RHS = FDSplit[1]
-        let inLHS = true 
+        while (count < FDSet.length) {
 
-        // is the entirety of LHS of this FD in S?
-        for (let attr of LHS) {
-            if (!closureArr.includes(attr)) inLHS = false
-        }
+            if (!doneArr[count]) {
 
-        // if the LHS of this FD is in S, add RHS to Y+
-        if (inLHS) {
+                // moving one FD to the left at a time 
+                const FDToMove = document.querySelector('#FDList' + count)
+                FDToMove.style.animation = `moveFD ${speed}ms linear forwards`
+                await timer(2 * speed)
 
-            // highlights the LHS's attributes on both the FDSet, and the closure
-            for (let attr of LHS) {
+                const FDSplit = FDSet[count].split('->')
+                const LHS = FDSplit[0]
+                const RHS = FDSplit[1]
+                let inLHS = true
 
-                const matchFD = document.querySelector(`#FDListLHS${count}`)
-                matchFD.classList.add('fadeIn')
-                matchFD.addEventListener("webkitAnimationEnd", fadeAnimationEnd)
+                // is the entirety of LHS of this FD in S?
+                for (let attr of LHS) {
+                    if (!closureArr.includes(attr)) {
+                        inLHS = false
+                        repeat[0] = true
+                    }
+                }
 
-                const indexClosure = closureArr.indexOf(attr)
-                const matchClosure = document.querySelector(`#closure${indexClosure}`)
-                matchClosure.classList.add('fadeIn')
-                matchClosure.addEventListener("webkitAnimationEnd", fadeAnimationEnd)
+                // if the LHS of this FD is in S, add RHS to Y+
+                if (inLHS) {
+
+                    // highlights the LHS's attributes on both the FDSet, and the closure
+                    for (let attr of LHS) {
+
+                        const matchFD = document.querySelector(`#FDListLHS${count}`)
+                        matchFD.style.animation = `fadeIn ${speed}ms linear forwards`
+                        matchFD.speed = speed
+                        matchFD.addEventListener("webkitAnimationEnd", fadeAnimationEnd)
+
+                        const indexClosure = closureArr.indexOf(attr)
+                        const matchClosure = document.querySelector(`#closure${indexClosure}`)
+                        matchClosure.style.animation = `fadeIn ${speed}ms linear forwards`
+                        matchClosure.speed = speed
+                        matchClosure.addEventListener("webkitAnimationEnd", fadeAnimationEnd)
+
+                    }
+
+                    await timer(4 * speed) // wait for the highlighting for the LHS, not sure why you need 4000 though, 3000 doesn't work 
+
+                    // highlights the RHS's attributes on both the FDSet, and the closure 
+                    for (let attr of RHS) {
+
+                        let indexRepeated = -1
+                        let animationRepeated = ""
+                        doneArr[count] = true
+                        if (repeat[0]) repeat[1] = true
+
+                        // if closure already has the RHS, highlight with info colour  
+                        if (closureArr.includes(attr)) {
+                            indexRepeated = closureArr.indexOf(attr)
+                            animationRepeated = "fadeInInfo"
+                        }
+                        else {
+                            closureStr = `<span id='closure${closureArr.length}'>${attr}</span>`
+                            attributeSetDiv.innerHTML += closureStr
+                            indexRepeated = closureArr.length
+                            animationRepeated = "fadeIn"
+                            closureArr.push(attr)
+                        }
+
+                        const closureNewlyAdded = document.querySelector(`#closure${indexRepeated}`)
+                        closureNewlyAdded.style.animation = `${animationRepeated} ${speed}ms linear forwards`
+                        closureNewlyAdded.speed = speed
+                        closureNewlyAdded.addEventListener("webkitAnimationEnd", fadeAnimationEnd)
+
+                        const RHSNewlyAdded = document.querySelector(`#FDListRHS${count}`)
+                        RHSNewlyAdded.style.animation = `${animationRepeated} ${speed}ms linear forwards`
+                        RHSNewlyAdded.speed = speed
+                        RHSNewlyAdded.addEventListener("webkitAnimationEnd", fadeAnimationEnd)
+
+                    }
+
+                }
+
+                else {
+                    const unMatchFD = document.querySelector(`#FDListLHS${count}`)
+                    unMatchFD.style.animation = `fadeInErr ${speed}ms linear forwards`
+                    unMatchFD.speed = speed
+                    unMatchFD.addEventListener("webkitAnimationEnd", fadeAnimationEnd)
+                }
+
+                await timer(3 * speed) // the time between each FD, can be adjusted
+                FDToMove.style.animation = `revertFD ${speed}ms linear forwards` // return the FD back to position 
+                if (count == FDSet.length - 1) await timer(3 * speed) // want to wait for the last FD to return before the first one can go again 
 
             }
 
-            await timer(4000) // wait for the highlighting for the LHS, not sure why you need 4000 though, 3000 doesn't work 
-
-            // highlights the RHS's attributes on both the FDSet, and the closure 
-            for (let attr of RHS) {
-
-                // if closure already has the RHS, skip 
-                if (closureArr.includes(attr)) continue
-
-                closureStr = `<span id='closure${closureArr.length}'>${attr}</span>`
-                attributeSetDiv.innerHTML += closureStr
-
-                const closureNewlyAdded = document.querySelector(`#closure${closureArr.length}`)
-                closureNewlyAdded.classList.add('fadeIn')
-                closureNewlyAdded.addEventListener("webkitAnimationEnd", fadeAnimationEnd)
-
-                const RHSNewlyAdded = document.querySelector(`#FDListRHS${count}`)
-                RHSNewlyAdded.classList.add('fadeIn')
-                RHSNewlyAdded.addEventListener("webkitAnimationEnd", fadeAnimationEnd)
-
-                closureArr.push(attr)
-
-            }
+            count++;
 
         }
-
-        await timer(3000) // the time between each FD, can be adjusted
-        count++;
-
-        FDToMove.style.animation = "revertFD 2s linear forwards" // return the FD back to position 
 
     }
 
@@ -194,15 +237,25 @@ function timer(duration) {
 
 // callback function used with events for when the animations end 
 function fadeAnimationEnd(e) {
+
     // after fadeIn has done, you want to fadeOut
     if (e.animationName == "fadeIn") {
         setTimeout(() => {
-            this.classList.remove('fadeIn')
-            this.classList.add('fadeOut')
-        }, 1000)
+            this.style.animation = `fadeOut ${this.speed}ms linear forwards`
+        }, this.speed)
+    }
+    else if (e.animationName == "fadeInErr") {
+        setTimeout(() => {
+            this.style.animation = `fadeOutErr ${this.speed}ms linear forwards`
+        }, this.speed)
+    }
+    else if (e.animationName == "fadeInInfo") {
+        setTimeout(() => {
+            this.style.animation = `fadeOutInfo ${this.speed}ms linear forwards`
+        }, this.speed)
     }
     // only remove fadeOut class when you're done fading out 
     else {
-        this.classList.remove('fadeOut')
+        this.style.animation = ""
     }
 }

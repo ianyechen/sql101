@@ -4,4 +4,4 @@ console.log("Loading example.js")
 const attributeSet = "AB"
 const FDSet = ["AB->C", "BC->AD", "D->E", "CF->B"]
 
-animationClosure(attributeSet, FDSet)
+animationClosure(attributeSet, FDSet, 250)

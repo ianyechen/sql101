@@ -67,3 +67,47 @@
         color: white;
     }
 }
+
+@keyframes fadeInErr {
+    0% {
+        opacity: 0;
+        color: white;
+    }
+    100% {
+        opacity: 1;
+        color: #ff0000;
+    }
+}
+
+@keyframes fadeOutErr {
+    0% {
+        opacity: 1;
+        color: #ff0000;
+    }
+    100% {
+        opacity: 1;
+        color: white;
+    }
+}
+
+@keyframes fadeInInfo {
+    0% {
+        opacity: 0;
+        color: white;
+    }
+    100% {
+        opacity: 1;
+        color: #ffba19;
+    }
+}
+
+@keyframes fadeOutInfo {
+    0% {
+        opacity: 1;
+        color: #ffba19;
+    }
+    100% {
+        opacity: 1;
+        color: white;
+    }
+}
