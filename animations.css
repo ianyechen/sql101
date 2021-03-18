@@ -1,0 +1,69 @@
+/* moving each individual FD to the left for each step */
+@keyframes moveFD {
+    0% {
+        position: relative;
+        right: 0vw;
+    }
+    25% {
+        position: relative;
+        right: 5vw;
+    }
+    50% {
+        position: relative;
+        right: 10vw;
+    }
+    75% {
+        position: relative;
+        right: 15vw;
+    }
+    100% {
+        position: relative;
+        right: 20vw;
+    }
+}
+
+/* moving each individual FD to their original position for each step */
+@keyframes revertFD {
+    0% {
+        position: relative;
+        left: -20vw;
+    }
+    25% {
+        position: relative;
+        left: -15vw;
+    }
+    50% {
+        position: relative;
+        left: -10vw;
+    }
+    75% {
+        position: relative;
+        left: -5vw;
+    }
+    100% {
+        position: relative;
+        left: 0vw;
+    }
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        color: white;
+    }
+    100% {
+        opacity: 1;
+        color: #39ff14;
+    }
+}
+
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+        color: #39ff14;
+    }
+    100% {
+        opacity: 1;
+        color: white;
+    }
+}
