@@ -1,16 +1,37 @@
 "use strict"
 console.log("Loading library.js")
 
+// global speed variable, used for adjusting the speed of the animations
+let animationSpeed = 0
+// contains all the animations 
+// [[], [{}, {}], [{}]]
+// outer array is the animationArr
+// each animation "step" will be an array of animationObj's
+let animationArr = []
+// used to temporary store the animations of one "step"
+// may store one more animation depending on how many animations should happen at once 
+let arrayToPush = []
+// stores the details of an animation
+// "element": the document element that will display the animation 
+// "animation_name": animation name, animation speed, etc.
+// "animation_event": the animation onEnded function that should be called, could be no if no callback function is needed 
+let animationObj = {}
+
 // the main functions that will be used for animations
 function animationClosure(attributeSet, FDSet, speed) {
     console.log("function animationClosure is being called")
 
+    animationSpeed = speed
+
     let closureArr = [] // the array that will store the closures 
     splitFD(FDSet) // splits the RHS of FDs if necessary 
 
-    displayAttributeSet(attributeSet)
-    displayFDSet(FDSet)
+    displayInput(attributeSet, FDSet)
+    displayAlgorithm("Closure")
+
+    // first compute the algorithm and store all information before showing animation
     findClosure(attributeSet, FDSet, closureArr, speed)
+    doAnimation()
 
 }
 
@@ -55,7 +76,7 @@ function splitFD(FDSet) {
 
 function displayFDSet(FDSet) {
 
-    const canvas = document.querySelector('#canvas')
+    const inputDiv = document.querySelector('#inputDiv')
     const FDSetDiv = document.createElement('div')
     FDSetDiv.id = "FDSetDiv"
 
@@ -70,18 +91,18 @@ function displayFDSet(FDSet) {
         FDSetDiv.appendChild(FDList)
     })
 
-    canvas.appendChild(FDSetDiv)
+    inputDiv.appendChild(FDSetDiv)
 
 }
 
 function displayAttributeSet(attributeSet) {
 
-    const canvas = document.querySelector('#canvas')
+    const inputDiv = document.querySelector('#inputDiv')
     const attributeSetDiv = document.createElement('div')
     attributeSetDiv.id = "attributeSetDiv"
 
-    attributeSetDiv.innerHTML = `<p>${attributeSet}</p><br><br><span>${attributeSet}<sup>+</sup> = </span>`
-    canvas.appendChild(attributeSetDiv)
+    attributeSetDiv.innerHTML = `<p>We want to find the closure for ${attributeSet}.</p><span>${attributeSet}<sup>+</sup> = </span>`
+    inputDiv.appendChild(attributeSetDiv)
 
 }
 
@@ -101,25 +122,36 @@ async function findClosure(attributeSet, FDSet, closureArr, speed) {
         closureArr.push(attr)
     })
 
-    let closureStr = ""
+    const attributeSetDiv = document.querySelector('#attributeSetDiv')
+
     closureArr.forEach((attr, index) => {
         // for updating the closure HTML
-        closureStr += `<span id='closure${index}'>${attr}</span>`
+        const closureSpan = document.createElement('span')
+        closureSpan.innerHTML = `${attr}`
+        closureSpan.id = `closure${index}`
+        closureSpan.style.opacity = 0 // want to show the user the closure step by step, only turn opacity = 1 after animation "step"
+        attributeSetDiv.appendChild(closureSpan)
     })
-
-    // adds the closure span to the attributeSet+ = line 
-    const attributeSetDiv = document.querySelector('#attributeSetDiv')
-    attributeSetDiv.innerHTML += closureStr
 
     // initially, show that you initialize Y+ to Y 
     const closureSpans = document.querySelectorAll("[id^='closure']")
     closureSpans.forEach(closureSpan => {
-        closureSpan.style.animation = `fadeIn ${speed}ms linear forwards`
-        closureSpan.speed = speed
-        closureSpan.addEventListener("webkitAnimationEnd", fadeAnimationEnd) // remove class when animation is done
+        // the Y+ initialization should be shown in one animation "step"
+        animationObj = {
+            "element": closureSpan,
+            "animation_name": `fadeIn ${animationSpeed}ms linear forwards`,
+            "animation_event": fadeAnimationEnd
+        }
+        arrayToPush.push(animationObj)
     })
+    pushAnimationToArr()
 
-    await timer(3 * speed) // the initial fadeIn effect of Y+ (Y at this moment)
+    // the initial fadeIn effect of Y+ (Y at this moment)
+    animationObj = {
+        "timer": 3 * animationSpeed
+    }
+    arrayToPush.push(animationObj)
+    pushAnimationToArr()
 
     let count = 0;
     let repeat = [true, true]; // first index is true if something can be checked again, second index is true if repeat[0] is true and if an attr. has been added to the closure
@@ -137,8 +169,20 @@ async function findClosure(attributeSet, FDSet, closureArr, speed) {
 
                 // moving one FD to the left at a time 
                 const FDToMove = document.querySelector('#FDList' + count)
-                FDToMove.style.animation = `moveFD ${speed}ms linear forwards`
-                await timer(2 * speed)
+                animationObj = {
+                    "element": FDToMove,
+                    "animation_name": `moveFD ${animationSpeed}ms linear forwards`,
+                    "animation_event": undefined
+                }
+                arrayToPush.push(animationObj)
+                pushAnimationToArr()
+
+                // waiting for the FD to finish moving horizontally 
+                animationObj = {
+                    "timer": 2 * animationSpeed
+                }
+                arrayToPush.push(animationObj)
+                pushAnimationToArr()
 
                 const FDSplit = FDSet[count].split('->')
                 const LHS = FDSplit[0]
@@ -160,19 +204,32 @@ async function findClosure(attributeSet, FDSet, closureArr, speed) {
                     for (let attr of LHS) {
 
                         const matchFD = document.querySelector(`#FDListLHS${count}`)
-                        matchFD.style.animation = `fadeIn ${speed}ms linear forwards`
-                        matchFD.speed = speed
-                        matchFD.addEventListener("webkitAnimationEnd", fadeAnimationEnd)
+                        animationObj = {
+                            "element": matchFD,
+                            "animation_name": `fadeIn ${animationSpeed}ms linear forwards`,
+                            "animation_event": fadeAnimationEnd
+                        }
+                        arrayToPush.push(animationObj)
 
                         const indexClosure = closureArr.indexOf(attr)
                         const matchClosure = document.querySelector(`#closure${indexClosure}`)
-                        matchClosure.style.animation = `fadeIn ${speed}ms linear forwards`
-                        matchClosure.speed = speed
-                        matchClosure.addEventListener("webkitAnimationEnd", fadeAnimationEnd)
+                        animationObj = {
+                            "element": matchClosure,
+                            "animation_name": `fadeIn ${animationSpeed}ms linear forwards`,
+                            "animation_event": fadeAnimationEnd
+                        }
+                        arrayToPush.push(animationObj)
+
+                        pushAnimationToArr()
 
                     }
 
-                    await timer(4 * speed) // wait for the highlighting for the LHS, not sure why you need 4000 though, 3000 doesn't work 
+                    // wait for the highlighting for the LHS, not sure why you need 4000 though, 3000 doesn't work 
+                    animationObj = {
+                        "timer": 4 * animationSpeed
+                    }
+                    arrayToPush.push(animationObj)
+                    pushAnimationToArr()
 
                     // highlights the RHS's attributes on both the FDSet, and the closure 
                     for (let attr of RHS) {
@@ -188,37 +245,78 @@ async function findClosure(attributeSet, FDSet, closureArr, speed) {
                             animationRepeated = "fadeInInfo"
                         }
                         else {
-                            closureStr = `<span id='closure${closureArr.length}'>${attr}</span>`
-                            attributeSetDiv.innerHTML += closureStr
+                            const attributeSetDiv = document.querySelector('#attributeSetDiv')
+                            const closureSpan = document.createElement('span')
+
+                            closureSpan.innerHTML = `${attr}`
+                            closureSpan.id = `closure${closureArr.length}`
+                            closureSpan.style.opacity = 0
+                            attributeSetDiv.appendChild(closureSpan)
+
                             indexRepeated = closureArr.length
                             animationRepeated = "fadeIn"
                             closureArr.push(attr)
                         }
 
                         const closureNewlyAdded = document.querySelector(`#closure${indexRepeated}`)
-                        closureNewlyAdded.style.animation = `${animationRepeated} ${speed}ms linear forwards`
-                        closureNewlyAdded.speed = speed
-                        closureNewlyAdded.addEventListener("webkitAnimationEnd", fadeAnimationEnd)
+                        animationObj = {
+                            "element": closureNewlyAdded,
+                            "animation_name": `${animationRepeated} ${animationSpeed}ms linear forwards`,
+                            "animation_event": fadeAnimationEnd
+                        }
+                        arrayToPush.push(animationObj)
 
                         const RHSNewlyAdded = document.querySelector(`#FDListRHS${count}`)
-                        RHSNewlyAdded.style.animation = `${animationRepeated} ${speed}ms linear forwards`
-                        RHSNewlyAdded.speed = speed
-                        RHSNewlyAdded.addEventListener("webkitAnimationEnd", fadeAnimationEnd)
+                        animationObj = {
+                            "element": RHSNewlyAdded,
+                            "animation_name": `${animationRepeated} ${animationSpeed}ms linear forwards`,
+                            "animation_event": fadeAnimationEnd
+                        }
+                        arrayToPush.push(animationObj)
+
+                        pushAnimationToArr()
 
                     }
 
                 }
 
                 else {
+
                     const unMatchFD = document.querySelector(`#FDListLHS${count}`)
-                    unMatchFD.style.animation = `fadeInErr ${speed}ms linear forwards`
-                    unMatchFD.speed = speed
-                    unMatchFD.addEventListener("webkitAnimationEnd", fadeAnimationEnd)
+                    animationObj = {
+                        "element": unMatchFD,
+                        "animation_name": `fadeInErr ${animationSpeed}ms linear forwards`,
+                        "animation_event": fadeAnimationEnd
+                    }
+                    arrayToPush.push(animationObj)
+                    pushAnimationToArr()
+
                 }
 
-                await timer(3 * speed) // the time between each FD, can be adjusted
-                FDToMove.style.animation = `revertFD ${speed}ms linear forwards` // return the FD back to position 
-                if (count == FDSet.length - 1) await timer(3 * speed) // want to wait for the last FD to return before the first one can go again 
+                // the time between each FD, can be adjusted
+                animationObj = {
+                    "timer": 3 * animationSpeed
+                }
+                arrayToPush.push(animationObj)
+                pushAnimationToArr()
+
+                // return the FD back to position 
+                animationObj = {
+                    "element": FDToMove,
+                    "animation_name": `revertFD ${animationSpeed}ms linear forwards`,
+                    "animation_event": undefined
+                }
+                arrayToPush.push(animationObj)
+                pushAnimationToArr()
+
+                // want to wait for the last FD to return before the first one can go again 
+                if (count == FDSet.length - 1) {
+                    animationObj = {
+                        "timer": 3 * animationSpeed
+                    }
+                    arrayToPush.push(animationObj)
+                    pushAnimationToArr()
+                }
 
             }
 
@@ -237,25 +335,106 @@ function timer(duration) {
 
 // callback function used with events for when the animations end 
 function fadeAnimationEnd(e) {
+    this.style.opacity = 1 // want to show closures after each animation "step", no need to hide it anymore 
 
     // after fadeIn has done, you want to fadeOut
     if (e.animationName == "fadeIn") {
         setTimeout(() => {
-            this.style.animation = `fadeOut ${this.speed}ms linear forwards`
-        }, this.speed)
+            this.style.animation = `fadeOut ${animationSpeed}ms linear forwards`
+        }, animationSpeed)
     }
     else if (e.animationName == "fadeInErr") {
         setTimeout(() => {
-            this.style.animation = `fadeOutErr ${this.speed}ms linear forwards`
-        }, this.speed)
+            this.style.animation = `fadeOutErr ${animationSpeed}ms linear forwards`
+        }, animationSpeed)
     }
     else if (e.animationName == "fadeInInfo") {
         setTimeout(() => {
-            this.style.animation = `fadeOutInfo ${this.speed}ms linear forwards`
-        }, this.speed)
+            this.style.animation = `fadeOutInfo ${animationSpeed}ms linear forwards`
+        }, animationSpeed)
     }
     // only remove fadeOut class when you're done fading out 
     else {
         this.style.animation = ""
     }
+}
+
+function displayAlgorithm(algorithm) {
+
+    const algorithmDiv = document.createElement('div')
+    algorithmDiv.id = "algorithmDiv"
+    const algo = `
+        <p>attribute_closure(Y, S):</p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;initialize Y+ to Y</p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;split RHS's of FDs if necessary</p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;repeat until no more changes occur:</p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If there is an FD LHS -> RHS in S such that LHS is in Y+:</p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Add RHS to Y+</p>
+        <p>&nbsp;&nbsp;&nbsp;&nbsp;return Y+</p>
+    `
+    const canvas = document.querySelector('#canvas')
+    algorithmDiv.innerHTML = algo
+    canvas.appendChild(algorithmDiv)
+
+}
+
+function displayInput(attributeSet, FDSet) {
+
+    const inputDiv = document.createElement('div')
+    const buttonsDiv = document.createElement('div')
+    const speedUpButton = document.createElement('button')
+    const speedDownButton = document.createElement('button')
+    const canvas = document.querySelector('#canvas')
+
+    inputDiv.id = "inputDiv"
+    buttonsDiv.id = "buttonsDiv"
+    speedUpButton.id = "speedUpButton"
+    speedDownButton.id = "speedDownButton"
+    speedUpButton.classList.add("speedButton")
+    speedDownButton.classList.add("speedButton")
+    speedUpButton.innerHTML = "Faster"
+    speedDownButton.innerHTML = "Slower"
+    speedUpButton.onclick = function () { changeSpeed("faster") }
+    speedDownButton.onclick = function () { changeSpeed("slower") }
+
+    buttonsDiv.appendChild(speedUpButton)
+    buttonsDiv.appendChild(speedDownButton)
+    canvas.appendChild(buttonsDiv)
+    canvas.appendChild(inputDiv)
+
+    displayAttributeSet(attributeSet)
+    displayFDSet(FDSet)
+
+}
+
+function changeSpeed(option) {
+    if (option == "faster") animationSpeed /= 1.25
+    else animationSpeed *= 1.25
+}
+
+// adds an animation "step" to the global animationArr
+function pushAnimationToArr() {
+    animationArr.push(arrayToPush)
+    arrayToPush = []
+}
+
+async function doAnimation() {
+
+    // can't do asyncs in forEach 
+    for (let animations of animationArr) {
+
+        for (let animation of animations) {
+
+            if ('animation_name' in animation) {
+                animation["element"].style.animation = animation["animation_name"]
+                animation["element"].addEventListener("webkitAnimationEnd", animation["animation_event"])
+            }
+
+            else if ('timer' in animation) {
+                await timer(animation["timer"])
+            }
+
+        }
+    }
+
 }

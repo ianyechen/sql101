@@ -1,14 +1,38 @@
 body {
-    background-color: rgb(0, 0, 0);
-    color: white;
+    font-family: 'Alegreya Sans', sans-serif;
 }
 
-#attributeSetDiv {
+/* contains the algorithm in text */
+#algorithmDiv {
+    width: 50%;
+    float: right;
+}
+
+/* contains the inputs such as the attributeSet and the FDSet */
+#inputDiv {
     width: 50%;
     float: left;
 }
 
+#attributeSetDiv {
+    margin: 5%;
+}
+
 #FDSetDiv {
-    width: 50%;
-    float: right;
+    margin: 5%;
+}
+
+.speedButton {
+    min-height: 5vh;
+    min-width: 5vw;
+    margin: 1%;
+    background-color: white;
+    text-align: center;
+    border: 1px solid rgb(0, 0, 0);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.hidden {
+    opacity: 0;
 }
