@@ -338,7 +338,7 @@ function timer(duration) {
 
 // callback function used with events for when the animations end 
 function fadeAnimationEnd(e) {
-   
+
     this.style.opacity = 1 // want to show closures after each animation "step", no need to hide it anymore 
     if (animationIndex == animationArr.length) return // want to keep the last animation (FD going back)
 
@@ -403,7 +403,7 @@ function displayInput(attributeSet, FDSet) {
     const playButton = document.createElement('button')
     const nextButton = document.createElement('button')
     const prevButton = document.createElement('button')
-    
+
     const canvas = document.querySelector('#canvas')
 
     inputDiv.id = "inputDiv"
@@ -461,7 +461,7 @@ function pushAnimationToArr() {
 function toggleAnimationPause() {
 
     const pausedButton = document.querySelector('#pauseButton')
-    
+
     if (animationPaused) {
         for (let animation of animatingArr) {
             animation.style.animationPlayState = "running"
@@ -474,7 +474,7 @@ function toggleAnimationPause() {
     else {
         for (let animation of animatingArr) {
             animation.style.animationPlayState = "paused"
-        } 
+        }
         pausedButton.innerHTML = "Play"
         animationPaused = true
     }
@@ -512,7 +512,58 @@ function doAnimation() {
         }
 
         animationIndex++
-        
+
     }
+
+}
+
+function createTable(attributes, data) {
+
+    makeTable()
+    makeHeadings(attributes)
+    makeData(attributes, data)
+
+}
+
+function makeTable() {
+
+    const table = document.createElement('table')
+    table.id = 'table'
+
+    const canvas = document.querySelector('#canvas')
+    // algorithmDiv.innerHTML = table
+    canvas.appendChild(table)
+
+}
+
+function makeHeadings(attributes) {
+
+    const headingRow = document.createElement('tr')
+
+    for (let attribute of attributes) {
+        const headingCol = document.createElement('th')
+        headingCol.innerHTML = attribute
+        headingRow.appendChild(headingCol)
+    }
+
+    const table = document.querySelector('#table')
+    table.appendChild(headingRow)
+
+}
+
+function makeData(attributes, data) {
+
+    // const dataRow = document.createElement('th')
+
+    // for (let row of data) {
+    //     for (let attribute of attributes) {
+    //         const dataCol = document.createElement('td')
+    //         dataCol.innerHTML = row[attribute]
+    //         dataRow.appendChild(dataCol)
+    //     }
+    // }
+
+    // const table = document.querySelector('#table')
+    // table.appendChild(dataRow)
 
 }
