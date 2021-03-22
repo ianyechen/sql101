@@ -20,6 +20,8 @@ let arrayToPush = []
 let animatingArr = []
 // holds the index of animationArr that current animation "step" is on 
 let animationIndex = 0;
+// true if animation is paused, false if animation is running 
+let animationPaused = true;
 
 // the main functions that will be used for animations
 function animationClosure(attributeSet, FDSet, speed) {
@@ -35,7 +37,6 @@ function animationClosure(attributeSet, FDSet, speed) {
 
     // first compute the algorithm and store all information before showing animation
     findClosure(attributeSet, FDSet, closureArr, speed)
-    doAnimation()
 
 }
 
@@ -143,7 +144,7 @@ async function findClosure(attributeSet, FDSet, closureArr, speed) {
         // the Y+ initialization should be shown in one animation "step"
         let animationObj = {
             "element": closureSpan,
-            "animation_name": `fadeIn ${animationSpeed}ms linear forwards`,
+            "animation_name": `fadeIn speedms linear forwards`,
             "animation_event": fadeAnimationEnd
         }
         arrayToPush.push(animationObj)
@@ -175,7 +176,7 @@ async function findClosure(attributeSet, FDSet, closureArr, speed) {
                 const FDToMove = document.querySelector('#FDList' + count)
                 let animationObjMove = {
                     "element": FDToMove,
-                    "animation_name": `moveFD ${animationSpeed}ms linear forwards`,
+                    "animation_name": `moveFD speedms linear forwards`,
                     "animation_event": fadeAnimationEnd
                 }
                 arrayToPush.push(animationObjMove)
@@ -211,7 +212,7 @@ async function findClosure(attributeSet, FDSet, closureArr, speed) {
                         const matchClosure = document.querySelector(`#closure${indexClosure}`)
                         let animationObj = {
                             "element": matchClosure,
-                            "animation_name": `fadeIn ${animationSpeed}ms linear forwards`,
+                            "animation_name": `fadeIn speedms linear forwards`,
                             "animation_event": fadeAnimationEnd
                         }
                         arrayToPush.push(animationObj)
@@ -221,7 +222,7 @@ async function findClosure(attributeSet, FDSet, closureArr, speed) {
                     const matchFD = document.querySelector(`#FDListLHS${count}`)
                     let animationObjLHS = {
                         "element": matchFD,
-                        "animation_name": `fadeIn ${animationSpeed}ms linear forwards`,
+                        "animation_name": `fadeIn speedms linear forwards`,
                         "animation_event": fadeAnimationEnd
                     }
                     arrayToPush.push(animationObjLHS)
@@ -264,7 +265,7 @@ async function findClosure(attributeSet, FDSet, closureArr, speed) {
                         const closureNewlyAdded = document.querySelector(`#closure${indexRepeated}`)
                         let animationObj = {
                             "element": closureNewlyAdded,
-                            "animation_name": `${animationRepeated} ${animationSpeed}ms linear forwards`,
+                            "animation_name": `${animationRepeated} speedms linear forwards`,
                             "animation_event": fadeAnimationEnd
                         }
                         arrayToPush.push(animationObj)
@@ -274,7 +275,7 @@ async function findClosure(attributeSet, FDSet, closureArr, speed) {
                     const RHSNewlyAdded = document.querySelector(`#FDListRHS${count}`)
                     let animationObjRHS = {
                         "element": RHSNewlyAdded,
-                        "animation_name": `${animationRepeated} ${animationSpeed}ms linear forwards`,
+                        "animation_name": `${animationRepeated} speedms linear forwards`,
                         "animation_event": fadeAnimationEnd
                     }
                     arrayToPush.push(animationObjRHS)
@@ -287,7 +288,7 @@ async function findClosure(attributeSet, FDSet, closureArr, speed) {
                     const unMatchFD = document.querySelector(`#FDListLHS${count}`)
                     let animationObj = {
                         "element": unMatchFD,
-                        "animation_name": `fadeInErr ${animationSpeed}ms linear forwards`,
+                        "animation_name": `fadeInErr speedms linear forwards`,
                         "animation_event": fadeAnimationEnd
                     }
                     arrayToPush.push(animationObj)
@@ -305,7 +306,7 @@ async function findClosure(attributeSet, FDSet, closureArr, speed) {
                 // return the FD back to position 
                 let animationObjRev = {
                     "element": FDToMove,
-                    "animation_name": `revertFD ${animationSpeed}ms linear forwards`,
+                    "animation_name": `revertFD speedms linear forwards`,
                     "animation_event": fadeAnimationEnd
                 }
                 arrayToPush.push(animationObjRev)
@@ -400,6 +401,8 @@ function displayInput(attributeSet, FDSet) {
     const speedDownButton = document.createElement('button')
     const pauseButton = document.createElement('button')
     const playButton = document.createElement('button')
+    const nextButton = document.createElement('button')
+    const prevButton = document.createElement('button')
     
     const canvas = document.querySelector('#canvas')
 
@@ -409,27 +412,32 @@ function displayInput(attributeSet, FDSet) {
     speedUpButton.id = "speedUpButton"
     speedDownButton.id = "speedDownButton"
     pauseButton.id = "pauseButton"
-    playButton.id = "playButton"
+    nextButton.id = "nextButton"
+    prevButton.id = "prevButton"
 
     speedUpButton.classList.add("speedButton")
     speedDownButton.classList.add("speedButton")
     pauseButton.classList.add("speedButton")
-    playButton.classList.add("speedButton")
+    nextButton.classList.add("speedButton")
+    prevButton.classList.add("speedButton")
 
     speedUpButton.innerHTML = "Faster"
     speedDownButton.innerHTML = "Slower"
-    pauseButton.innerHTML = "Pause"
-    playButton.innerHTML = "Play"
+    pauseButton.innerHTML = "Play"
+    nextButton.innerHTML = "Next"
+    prevButton.innerHTML = "Prev"
 
     speedUpButton.onclick = function () { changeSpeed("faster") }
     speedDownButton.onclick = function () { changeSpeed("slower") }
-    pauseButton.onclick = function () { }
-    playButton.onclick = function () { }
+    pauseButton.onclick = function () { toggleAnimationPause() }
+    nextButton.onclick = function () { nextAnimation() }
+    prevButton.onclick = function () { prevAnimation() }
 
     buttonsDiv.appendChild(speedUpButton)
     buttonsDiv.appendChild(speedDownButton)
     buttonsDiv.appendChild(pauseButton)
-    buttonsDiv.appendChild(playButton)
+    buttonsDiv.appendChild(nextButton)
+    buttonsDiv.appendChild(prevButton)
     canvas.appendChild(buttonsDiv)
     canvas.appendChild(inputDiv)
 
@@ -449,9 +457,46 @@ function pushAnimationToArr() {
     arrayToPush = []
 }
 
-async function doAnimation() {
+// toggles between the animation been played or paused 
+function toggleAnimationPause() {
 
-    // can't do asyncs in forEach 
+    const pausedButton = document.querySelector('#pauseButton')
+    
+    if (animationPaused) {
+        for (let animation of animatingArr) {
+            animation.style.animationPlayState = "running"
+        }
+        pausedButton.innerHTML = "Pause"
+        animationPaused = false
+        if (animatingArr.length == 0) doAnimation() // used for the very start 
+    }
+
+    else {
+        for (let animation of animatingArr) {
+            animation.style.animationPlayState = "paused"
+        } 
+        pausedButton.innerHTML = "Play"
+        animationPaused = true
+    }
+
+}
+
+function nextAnimation() {
+    animatingArr.splice(0, animatingArr.length)
+    animationIndex++
+    doAnimation()
+}
+
+function prevAnimation() {
+    animatingArr.splice(0, animatingArr.length)
+    animationIndex--
+    doAnimation()
+}
+
+function doAnimation() {
+
+    if (animationPaused) return
+
     if (animationIndex < animationArr.length) {
 
         let animations = animationArr[animationIndex]
@@ -459,7 +504,7 @@ async function doAnimation() {
         for (let animation of animations) {
 
             if ('animation_name' in animation) {
-                animation["element"].style.animation = animation["animation_name"]
+                animation["element"].style.animation = animation["animation_name"].replace("speed", `${animationSpeed}`)
                 animatingArr.push(animation["element"])
                 animation["element"].addEventListener("webkitAnimationEnd", animation["animation_event"])
             }
