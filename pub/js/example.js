@@ -1,8 +1,10 @@
 "use strict"
 console.log("Loading example.js")
 
-const attributeSet = "AB"
-const FDSet = ["AB->C", "BC->AD", "D->E", "CF->B"]
+// const attributeSet = "AB"
+// const FDSet = ["AB->C", "BC->AD", "D->E", "CF->B"]
+const attributeSet = "C"
+const FDSet = ["AC->F", "CEF->B", "C->D", "DC->A"]
 
 animationClosure(attributeSet, FDSet, 500)
 

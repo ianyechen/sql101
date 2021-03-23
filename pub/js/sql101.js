@@ -371,7 +371,7 @@ function fadeAnimationEnd(e) {
         animatingArr.splice(animatingArr.indexOf(e.target), 1) // since animation is done, remove from animatingArr
         if (animatingArr.length == 0 && !animationStep) { // if this animation "step" is done, move on to the next step
             // animationIndex++    
-            doAnimation() 
+            setTimeout(doAnimation, animationSpeed)
         }
     }
 
@@ -382,7 +382,7 @@ function fadeAnimationEnd(e) {
         animatingArr.splice(animatingArr.indexOf(e.target), 1)
         if (animatingArr.length == 0 && !animationStep) {
             // animationIndex++
-            doAnimation()
+            setTimeout(doAnimation, animationSpeed)
         }
     }
 
