@@ -22,6 +22,8 @@ let animatingArr = []
 let animationIndex = 0
 // true if animation is paused, false if animation is running 
 let animationPaused = true
+// true if the animation is to be stepped through one by one, instead of playing it all
+let animationStep = false
 
 // used for the MC quiz to know which current question we are on 
 let quizIndex = 0
@@ -108,7 +110,7 @@ function displayAttributeSet(attributeSet) {
     const attributeSetDiv = document.createElement('div')
     attributeSetDiv.id = "attributeSetDiv"
 
-    attributeSetDiv.innerHTML = `<p>We want to find the closure for ${attributeSet}.</p><span>${attributeSet}<sup>+</sup> = </span>`
+    attributeSetDiv.innerHTML = `<h3>We want to find the closure for ${attributeSet}.</h3><span>${attributeSet}<sup>+</sup> = </span>`
     inputDiv.appendChild(attributeSetDiv)
 
 }
@@ -367,7 +369,10 @@ function fadeAnimationEnd(e) {
     else if (e.animationName == "moveFD") {
         this.removeEventListener("webkitAnimationEnd", fadeAnimationEnd) // remove event listener to avoid duplicates
         animatingArr.splice(animatingArr.indexOf(e.target), 1) // since animation is done, remove from animatingArr
-        if (animatingArr.length == 0) doAnimation() // if this animation "step" is done, move on to the next step
+        if (animatingArr.length == 0 && !animationStep) { // if this animation "step" is done, move on to the next step
+            // animationIndex++    
+            doAnimation() 
+        }
     }
 
     // only remove fadeOut class when you're done fading out 
@@ -375,7 +380,10 @@ function fadeAnimationEnd(e) {
         this.style.animation = ""
         this.removeEventListener("webkitAnimationEnd", fadeAnimationEnd)
         animatingArr.splice(animatingArr.indexOf(e.target), 1)
-        if (animatingArr.length == 0) doAnimation()
+        if (animatingArr.length == 0 && !animationStep) {
+            // animationIndex++
+            doAnimation()
+        }
     }
 
 }
@@ -385,13 +393,13 @@ function displayAlgorithm(algorithm) {
     const algorithmDiv = document.createElement('div')
     algorithmDiv.id = "algorithmDiv"
     const algo = `
-        <p>attribute_closure(Y, S):</p>
-        <p>&nbsp;&nbsp;&nbsp;&nbsp;initialize Y+ to Y</p>
-        <p>&nbsp;&nbsp;&nbsp;&nbsp;split RHS's of FDs if necessary</p>
-        <p>&nbsp;&nbsp;&nbsp;&nbsp;repeat until no more changes occur:</p>
-        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If there is an FD LHS -> RHS in S such that LHS is in Y+:</p>
-        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Add RHS to Y+</p>
-        <p>&nbsp;&nbsp;&nbsp;&nbsp;return Y+</p>
+        <h3 class='algorithm'>attribute_closure(Y, S):</h3>
+        <p class='algorithm'>&nbsp;&nbsp;&nbsp;&nbsp;initialize Y+ to Y</p>
+        <p class='algorithm'>&nbsp;&nbsp;&nbsp;&nbsp;split RHS's of FDs if necessary</p>
+        <p class='algorithm'>&nbsp;&nbsp;&nbsp;&nbsp;repeat until no more changes occur:</p>
+        <p class='algorithm'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If there is an FD LHS -> RHS in S such that LHS is in Y+:</p>
+        <p class='algorithm'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Add RHS to Y+</p>
+        <p class='algorithm'>&nbsp;&nbsp;&nbsp;&nbsp;return Y+</p>
     `
     const canvas = document.querySelector('#canvas')
     algorithmDiv.innerHTML = algo
@@ -407,7 +415,7 @@ function displayInput(attributeSet, FDSet) {
     const speedUpButton = document.createElement('button')
     const speedDownButton = document.createElement('button')
     const pauseButton = document.createElement('button')
-    const nextButton = document.createElement('button')
+    const nextStepButton = document.createElement('button')
     const prevButton = document.createElement('button')
 
     const canvas = document.querySelector('#canvas')
@@ -418,33 +426,33 @@ function displayInput(attributeSet, FDSet) {
     speedUpButton.id = "speedUpButton"
     speedDownButton.id = "speedDownButton"
     pauseButton.id = "pauseButton"
-    nextButton.id = "nextButton"
+    nextStepButton.id = "nextStepButton"
     prevButton.id = "prevButton"
 
-    speedUpButton.classList.add("speedButton")
-    speedDownButton.classList.add("speedButton")
-    pauseButton.classList.add("speedButton")
-    nextButton.classList.add("speedButton")
-    prevButton.classList.add("speedButton")
+    // speedUpButton.classList.add("speedButton")
+    // speedDownButton.classList.add("speedButton")
+    // pauseButton.classList.add("speedButton")
+    // nextButton.classList.add("speedButton")
+    // prevButton.classList.add("speedButton")
 
     speedUpButton.innerHTML = "Faster"
     speedDownButton.innerHTML = "Slower"
-    pauseButton.innerHTML = "Play"
-    nextButton.innerHTML = "Next"
+    pauseButton.innerHTML = "Play All"
+    nextStepButton.innerHTML = "Next Step"
     prevButton.innerHTML = "Prev"
 
     speedUpButton.onclick = function () { changeSpeed("faster") }
     speedDownButton.onclick = function () { changeSpeed("slower") }
     pauseButton.onclick = function () { toggleAnimationPause() }
-    nextButton.onclick = function () { nextAnimation() }
+    nextStepButton.onclick = function () { nextAnimation() }
     prevButton.onclick = function () { prevAnimation() }
 
     buttonsDiv.appendChild(speedUpButton)
     buttonsDiv.appendChild(speedDownButton)
     buttonsDiv.appendChild(pauseButton)
-    buttonsDiv.appendChild(nextButton)
-    buttonsDiv.appendChild(prevButton)
-    canvas.appendChild(buttonsDiv)
+    buttonsDiv.appendChild(nextStepButton)
+    // buttonsDiv.appendChild(prevButton)
+    inputDiv.appendChild(buttonsDiv)
     canvas.appendChild(inputDiv)
 
     displayAttributeSet(attributeSet)
@@ -466,6 +474,9 @@ function pushAnimationToArr() {
 // toggles between the animation been played or paused 
 function toggleAnimationPause() {
 
+    const nextStepButton = document.querySelector('#nextStepButton')
+    nextStepButton.disabled = true
+    
     const pausedButton = document.querySelector('#pauseButton')
 
     if (animationPaused) {
@@ -481,27 +492,32 @@ function toggleAnimationPause() {
         for (let animation of animatingArr) {
             animation.style.animationPlayState = "paused"
         }
-        pausedButton.innerHTML = "Play"
+        pausedButton.innerHTML = "Resume"
         animationPaused = true
     }
 
 }
 
 function nextAnimation() {
-    animatingArr.splice(0, animatingArr.length)
-    animationIndex++
+    if (animatingArr.length != 0) return // can't proceed until animations have finished
+    const pauseButton = document.querySelector('#pauseButton')
+    pauseButton.disabled = true
+    // animatingArr.splice(0, animatingArr.length)
+    // animationIndex++
+    animationStep = true
     doAnimation()
 }
 
 function prevAnimation() {
-    animatingArr.splice(0, animatingArr.length)
+    if (animatingArr.length != 0) return
+    // animatingArr.splice(0, animatingArr.length)
     animationIndex--
     doAnimation()
 }
 
 function doAnimation() {
 
-    if (animationPaused) return
+    if (animationPaused && !animationStep) return
 
     if (animationIndex < animationArr.length) {
 
@@ -587,7 +603,7 @@ function createMCQuiz(problems, table) {
     answerDiv.appendChild(answeringForm)
     answerDiv.appendChild(feedbackDiv)
 
-    const canvas = document.querySelector('#canvas')
+    const canvas = document.querySelector('#canvas2')
     canvas.appendChild(answerDiv)
 
     createTable(table)
@@ -708,7 +724,7 @@ function makeTable() {
     const tableDiv = document.createElement('div')
     tableDiv.id = 'tableDiv'
 
-    const canvas = document.querySelector('#canvas')
+    const canvas = document.querySelector('#canvas2')
     tableDiv.appendChild(table)
     canvas.appendChild(tableDiv)
 

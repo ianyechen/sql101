@@ -2,24 +2,40 @@ body {
     font-family: 'Alegreya Sans', sans-serif;
 }
 
+#canvas {
+    position: relative;
+    margin-bottom: 5%;
+}
+
+#canvas2 {
+    position: relative;
+    margin-bottom: 5%;
+}
+
 /* contains the algorithm in text */
 #algorithmDiv {
     width: 50%;
-    float: right;
+    display: inline-block;
+    left: 50%;
+    position: relative;
 }
 
 /* contains the inputs such as the attributeSet and the FDSet */
 #inputDiv {
     width: 50%;
-    float: left;
+    display: inline-block;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    position: absolute;
 }
 
-#attributeSetDiv {
-    margin: 5%;
+.algorithm {
+    padding-left: 25%
 }
 
-#FDSetDiv {
-    margin: 5%;
+#buttonsDiv, #attributeSetDiv, #FDSetDiv {
+    margin-left: 15%;
 }
 
 .hidden {
@@ -41,15 +57,26 @@ button {
     padding: 1%;
 }
 
+button:disabled {
+    background-color: #c1c8e4;
+    cursor: default;
+}
+
 /* contains the instructionsDiv, questionDiv, answeringForm, and feedbackDiv */
 #answerDiv {
     width: 50%;
-    float: left;
+    display: inline-block;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    position: absolute;
 }
 
 #tableDiv {
     width: 50%;
-    float: right;
+    display: inline-block;
+    left: 50%;
+    position: relative;
 }
 
 #instructionsDiv, #answeringForm, #questionDiv {
