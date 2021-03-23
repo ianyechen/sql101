@@ -19,13 +19,15 @@ let arrayToPush = []
 // contains all elements that currently in the middle of an animation
 let animatingArr = []
 // holds the index of animationArr that current animation "step" is on 
-let animationIndex = 0;
+let animationIndex = 0
 // true if animation is paused, false if animation is running 
-let animationPaused = true;
+let animationPaused = true
+
+// used for the MC quiz to know which current question we are on 
+let quizIndex = 0
 
 // the main functions that will be used for animations
 function animationClosure(attributeSet, FDSet, speed) {
-    console.log("function animationClosure is being called")
 
     animationSpeed = speed
 
@@ -59,7 +61,7 @@ function splitFD(FDSet) {
 
             let left = fdSplit[0]
             let right = fdSplit[1]
-            let count = 0;
+            let count = 0
 
             // continue splitting the FD until the RHS only has 1 value left on the RHS
             while (right.length > 1) {
@@ -158,8 +160,8 @@ async function findClosure(attributeSet, FDSet, closureArr, speed) {
     // arrayToPush.push(animationObj)
     // pushAnimationToArr()
 
-    let count = 0;
-    let repeat = [true, true]; // first index is true if something can be checked again, second index is true if repeat[0] is true and if an attr. has been added to the closure
+    let count = 0
+    let repeat = [true, true] // first index is true if something can be checked again, second index is true if repeat[0] is true and if an attr. has been added to the closure
 
     // loop while the FDSet still has some FD that's not been checked, or if need to check again because some new closure might have been added through previous FD's
     // you don't want to loop over again if the last FD cannot be added, and all the ones before it was successful 
@@ -248,6 +250,7 @@ async function findClosure(attributeSet, FDSet, closureArr, speed) {
                             indexRepeated = closureArr.indexOf(attr)
                             animationRepeated = "fadeInInfo"
                         }
+
                         else {
                             const attributeSetDiv = document.querySelector('#attributeSetDiv')
                             const closureSpan = document.createElement('span')
@@ -323,7 +326,7 @@ async function findClosure(attributeSet, FDSet, closureArr, speed) {
 
             }
 
-            count++;
+            count++
 
         }
 
@@ -348,21 +351,25 @@ function fadeAnimationEnd(e) {
             this.style.animation = `fadeOut ${animationSpeed}ms linear forwards`
         }, animationSpeed)
     }
+
     else if (e.animationName == "fadeInErr") {
         setTimeout(() => {
             this.style.animation = `fadeOutErr ${animationSpeed}ms linear forwards`
         }, animationSpeed)
     }
+
     else if (e.animationName == "fadeInInfo") {
         setTimeout(() => {
             this.style.animation = `fadeOutInfo ${animationSpeed}ms linear forwards`
         }, animationSpeed)
     }
+
     else if (e.animationName == "moveFD") {
         this.removeEventListener("webkitAnimationEnd", fadeAnimationEnd) // remove event listener to avoid duplicates
         animatingArr.splice(animatingArr.indexOf(e.target), 1) // since animation is done, remove from animatingArr
         if (animatingArr.length == 0) doAnimation() // if this animation "step" is done, move on to the next step
     }
+
     // only remove fadeOut class when you're done fading out 
     else {
         this.style.animation = ""
@@ -400,7 +407,6 @@ function displayInput(attributeSet, FDSet) {
     const speedUpButton = document.createElement('button')
     const speedDownButton = document.createElement('button')
     const pauseButton = document.createElement('button')
-    const playButton = document.createElement('button')
     const nextButton = document.createElement('button')
     const prevButton = document.createElement('button')
 
@@ -517,11 +523,180 @@ function doAnimation() {
 
 }
 
-function createTable(attributes, data) {
+// creates the answering part of the quiz maker 
+function createMCQuiz(problems, table) {
+    
+    const answerDiv = document.createElement('div')
+    answerDiv.id = 'answerDiv'
+
+    const instructionsDiv = document.createElement('div')
+    instructionsDiv.innerHTML = "<h3>Please choose the best answer for each question.</h3>"
+    instructionsDiv.id = 'instructionsDiv'
+    
+    const questionDiv = document.createElement('div')
+    questionDiv.innerHTML = `<p>${problems[quizIndex]["question"]}</p>`
+    questionDiv.id = 'questionDiv'
+
+    const answeringForm = document.createElement('form')
+    answeringForm.id = "answeringForm"
+    
+    for (let choice of problems[quizIndex]["choices"]) {
+
+        const inputElement = document.createElement('input')
+        inputElement.type = "radio"
+        inputElement.value = choice
+        inputElement.id = choice
+        inputElement.name = "choice"
+
+        const labelElement = document.createElement('label')
+        labelElement.setAttribute("for", choice)
+        labelElement.innerHTML = `${choice}<br>`
+
+        answeringForm.appendChild(inputElement)
+        answeringForm.appendChild(labelElement)
+
+    }
+
+    const submitButton = document.createElement('button')
+    submitButton.id = "submitButton"
+    submitButton.innerHTML = "Submit"
+    submitButton.type = "button"
+    submitButton.onclick = function() { checkAnswer(problems[quizIndex]["answer"]) }
+
+    const prevButton = document.createElement('button')
+    prevButton.id = "prevButton"
+    prevButton.innerHTML = "Prev"
+    prevButton.type = "button"
+    prevButton.onclick = function() { prevQuestion(problems) }
+    prevButton.style.display = "none"
+
+    const nextButton = document.createElement('button')
+    nextButton.id = "nextButton"
+    nextButton.innerHTML = "Next"
+    nextButton.type = "button"
+    nextButton.onclick = function() { nextQuestion(problems) }
+
+    const feedbackDiv = document.createElement('div')
+    feedbackDiv.id = 'feedbackDiv'
+
+    answeringForm.appendChild(submitButton)
+    answeringForm.appendChild(prevButton)
+    answeringForm.appendChild(nextButton)
+    answerDiv.appendChild(instructionsDiv)
+    answerDiv.appendChild(questionDiv)
+    answerDiv.appendChild(answeringForm)
+    answerDiv.appendChild(feedbackDiv)
+
+    const canvas = document.querySelector('#canvas')
+    canvas.appendChild(answerDiv)
+
+    createTable(table)
+
+}
+
+function nextQuestion(problems) {
+    // display the prev button if you're pressing next on the very first question 
+    if (quizIndex == 0) {
+        const prevButton = document.querySelector('#prevButton')
+        prevButton.style.display = "inline-block"
+    }
+
+    quizIndex++
+    changeQuestion(problems)
+    // clear the feedback when switching questions 
+    const feedbackDiv = document.querySelector('#feedbackDiv')
+    feedbackDiv.className = ''
+    feedbackDiv.innerHTML = ""
+    
+    // if got to very last question, don't display the next button
+    if (quizIndex == problems.length - 1) {
+        const nextButton = document.querySelector('#nextButton')
+        nextButton.style.display = "none"
+    }
+}
+
+function prevQuestion(problems) {
+    // display the prev button if you're pressing prev on the very last question 
+    if (quizIndex == problems.length - 1) {
+        const nextButton = document.querySelector('#nextButton')
+        nextButton.style.display = "inline-block"
+    }
+
+    quizIndex--
+    changeQuestion(problems)
+    // clear the feedback when switching questions 
+    const feedbackDiv = document.querySelector('#feedbackDiv')
+    feedbackDiv.className = ''
+    feedbackDiv.innerHTML = ""
+
+    // if got to very first question, don't display the prev button
+    if (quizIndex == 0) {
+        const prevButton = document.querySelector('#prevButton')
+        prevButton.style.display = "none"
+    }
+}
+
+function changeQuestion(problems) {
+
+    const questionDiv = document.querySelector('#questionDiv')
+    questionDiv.innerHTML = `<p>${problems[quizIndex]["question"]}</p>`
+
+    const answeringForm = document.querySelector('#answeringForm')
+    
+    let count = 0
+    for (let choice of problems[quizIndex]["choices"]) {
+
+        const inputElement = document.createElement('input')
+        inputElement.type = "radio"
+        inputElement.value = choice
+        inputElement.id = choice
+        inputElement.name = "choice"
+
+        const labelElement = document.createElement('label')
+        labelElement.setAttribute("for", choice)
+        labelElement.innerHTML = `${choice}<br>`
+
+        // need to replace the prev children that were already there 
+        answeringForm.replaceChild(inputElement, answeringForm.childNodes[count++])
+        answeringForm.replaceChild(labelElement, answeringForm.childNodes[count++])
+
+    }
+
+}
+
+// check to see if the given answer is right or wrong
+function checkAnswer(answer) {   
+
+    const answeringForm = document.querySelector('#answeringForm')
+    const data = Object.fromEntries(new FormData(answeringForm).entries())
+    const feedbackDiv = document.querySelector('#feedbackDiv')
+    
+    // if no answer was given
+    if (Object.keys(data).length == 0) {
+        feedbackDiv.innerHTML = "Please answer the question above!"
+        feedbackDiv.classList.remove('feedback-correct')
+        feedbackDiv.classList.add('feedback-incorrect')
+    }
+    // if incorrect answer 
+    else if (data["choice"] != answer) {
+        feedbackDiv.innerHTML = "Incorrect answer. Please try again!"
+        feedbackDiv.classList.remove('feedback-correct')
+        feedbackDiv.classList.add('feedback-incorrect')
+    }
+    // right answer
+    else {
+        feedbackDiv.innerHTML = "Correct answer. Good job!"
+        feedbackDiv.classList.remove('feedback-incorrect')
+        feedbackDiv.classList.add('feedback-correct')   
+    }
+
+}
+
+function createTable(table) {
 
     makeTable()
-    makeHeadings(attributes)
-    makeData(attributes, data)
+    makeHeadings(table["attributes"])
+    makeData(table["attributes"], table["data"])
 
 }
 
@@ -530,14 +705,18 @@ function makeTable() {
     const table = document.createElement('table')
     table.id = 'table'
 
+    const tableDiv = document.createElement('div')
+    tableDiv.id = 'tableDiv'
+
     const canvas = document.querySelector('#canvas')
-    // algorithmDiv.innerHTML = table
-    canvas.appendChild(table)
+    tableDiv.appendChild(table)
+    canvas.appendChild(tableDiv)
 
 }
 
 function makeHeadings(attributes) {
 
+    const thead = document.createElement('thead')
     const headingRow = document.createElement('tr')
 
     for (let attribute of attributes) {
@@ -547,23 +726,31 @@ function makeHeadings(attributes) {
     }
 
     const table = document.querySelector('#table')
-    table.appendChild(headingRow)
+    thead.appendChild(headingRow)
+    table.appendChild(thead)
 
 }
 
+// populate the rows of the table
 function makeData(attributes, data) {
 
-    // const dataRow = document.createElement('th')
+    const tbody = document.createElement('tbody')
 
-    // for (let row of data) {
-    //     for (let attribute of attributes) {
-    //         const dataCol = document.createElement('td')
-    //         dataCol.innerHTML = row[attribute]
-    //         dataRow.appendChild(dataCol)
-    //     }
-    // }
+    for (let row of data) {
 
-    // const table = document.querySelector('#table')
-    // table.appendChild(dataRow)
+        const dataRow = document.createElement('tr')
+
+        for (let attribute of attributes) {
+            const dataCol = document.createElement('td')
+            dataCol.innerHTML = row[attribute]
+            dataRow.appendChild(dataCol)
+        }
+
+        tbody.appendChild(dataRow)
+
+    }
+
+    const table = document.querySelector('#table')
+    table.appendChild(tbody)
 
 }
