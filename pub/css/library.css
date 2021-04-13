@@ -74,7 +74,7 @@ button:disabled {
     position: absolute;
 }
 
-#tableDiv {
+#tableDivMC, #tableDivMI {
     width: 50%;
     display: inline-block;
     left: 50%;
@@ -86,7 +86,7 @@ button:disabled {
 }
 
 /* used for any tables created for the quiz maker */
-#table {
+#tableMC, #tableMI {
     width: 50%;
     margin: 0 25% 0 25%;
     border: 1px solid black;
@@ -95,20 +95,24 @@ button:disabled {
     text-align: center;
 }
 
-#table thead tr {
+#tableMC thead tr, #tableMI thead tr {
     background-color: #5680e9;
     color: #ffffff;
 }
 
-#table th, #table td {
+#tableMC th, #tableMC td, #tableMI th, #tableMI td  {
     padding: 1% 2%;
 }
 
-#table tbody tr:last-of-type {
+#tableMI th, #tableMI td  {
+    max-width: 100px
+}
+
+#tableMC tbody tr:last-of-type, #tableMI tbody tr:last-of-type {
     border-bottom: 3px solid #5680e9;
 }
 
-#table tbody tr:nth-of-type(even) {
+#tableMC tbody tr:nth-of-type(even), #tableMI tbody tr:nth-of-type(even) {
     background-color: #c1c8e4;
 }
 
@@ -131,4 +135,9 @@ button:disabled {
     border-radius: 25px;
     border: 2px solid rgb(171, 230, 163);
     padding: 3%;
+}
+
+/* this is for the input field that will be for the MI type questions */
+.tableInput {
+    max-width: 60%;
 }

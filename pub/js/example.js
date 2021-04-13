@@ -8,7 +8,7 @@ const FDSet = ["AC->F", "CEF->B", "C->D", "DC->A"]
 
 animationClosure(attributeSet, FDSet, 500)
 
-const table = {
+const tableMC = {
     "attributes": ["sID", "oID", "grade"],
     "data": [
         { "sID": 1, "oID": 2, "grade": 85 },
@@ -25,7 +25,8 @@ const table = {
         { "sID": 9, "oID": 10, "grade": 44 },
     ]
 }
-const problems = [
+
+const problemsMC = [
     {
         "question": "If we do SELECT avg(grade) FROM RELATION GROUP BY sID, how many rows will be in the resulting relation?",
         "choices": ["0 rows", "5 rows", "-2 rows", "9 rows"],
@@ -43,4 +44,25 @@ const problems = [
     },
 ]
 
-createMCQuiz(problems, table)
+// createMCQuiz(problemsMC, tableMC)
+
+const problems = [
+    {
+        "question": "Given the following FDs, make an instance of the relation that violates the set of FDs. S = { A -> BC, B -> D }",
+        "FDSet": ["A->BC", "B->D"]
+    },
+    {
+        "question": "Given the following FDs, make an instance of the relation that violates the set of FDs. S = { BC -> D, AE -> B }",
+        "FDSet": ["BC->D", "AE->B"]
+    },
+    {
+        "question": "Given the following FDs, make an instance of the relation that violates the set of FDs. S = { A -> B, C -> D, B -> E }",
+        "FDSet": ["A->B", "C->D", "B->E"]
+    },
+]
+
+const table = {
+    "attributes": ["A", "B", "C", "D", "E"],
+}
+
+createMakeInstanceQuiz(problems, table)

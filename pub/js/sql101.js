@@ -476,7 +476,7 @@ function toggleAnimationPause() {
 
     const nextStepButton = document.querySelector('#nextStepButton')
     nextStepButton.disabled = true
-    
+
     const pausedButton = document.querySelector('#pauseButton')
 
     if (animationPaused) {
@@ -539,58 +539,73 @@ function doAnimation() {
 
 }
 
-// creates the answering part of the quiz maker 
+// the quiz where the user has to make an instance to violate for example a set of FDs
+function createMakeInstanceQuiz(problems, table) {
+    createAnswerDiv(problems, "MI", table)
+    createTable(table, "MI")
+}
+
+// the quiz where the user has to make a choice for MC questions 
 function createMCQuiz(problems, table) {
-    
+    createAnswerDiv(problems, "MC", table)
+    createTable(table, "MC")
+}
+
+// creates the answering part of the quiz maker 
+function createAnswerDiv(problems, type, table) {
+
     const answerDiv = document.createElement('div')
     answerDiv.id = 'answerDiv'
 
     const instructionsDiv = document.createElement('div')
     instructionsDiv.innerHTML = "<h3>Please choose the best answer for each question.</h3>"
     instructionsDiv.id = 'instructionsDiv'
-    
+
     const questionDiv = document.createElement('div')
     questionDiv.innerHTML = `<p>${problems[quizIndex]["question"]}</p>`
     questionDiv.id = 'questionDiv'
 
     const answeringForm = document.createElement('form')
     answeringForm.id = "answeringForm"
-    
-    for (let choice of problems[quizIndex]["choices"]) {
 
-        const inputElement = document.createElement('input')
-        inputElement.type = "radio"
-        inputElement.value = choice
-        inputElement.id = choice
-        inputElement.name = "choice"
+    if (type == "MC") {
+        for (let choice of problems[quizIndex]["choices"]) {
 
-        const labelElement = document.createElement('label')
-        labelElement.setAttribute("for", choice)
-        labelElement.innerHTML = `${choice}<br>`
+            const inputElement = document.createElement('input')
+            inputElement.type = "radio"
+            inputElement.value = choice
+            inputElement.id = choice
+            inputElement.name = "choice"
 
-        answeringForm.appendChild(inputElement)
-        answeringForm.appendChild(labelElement)
+            const labelElement = document.createElement('label')
+            labelElement.setAttribute("for", choice)
+            labelElement.innerHTML = `${choice}<br>`
 
+            answeringForm.appendChild(inputElement)
+            answeringForm.appendChild(labelElement)
+
+        }
     }
 
     const submitButton = document.createElement('button')
     submitButton.id = "submitButton"
     submitButton.innerHTML = "Submit"
     submitButton.type = "button"
-    submitButton.onclick = function() { checkAnswer(problems[quizIndex]["answer"]) }
+    if (type == "MC") submitButton.onclick = function () { checkAnswer(problems[quizIndex]["answer"]) }
+    else if (type == "MI") submitButton.onclick = function () { checkAnswerMI(problems[quizIndex]["FDSet"], table["attributes"]) }
 
     const prevButton = document.createElement('button')
     prevButton.id = "prevButton"
     prevButton.innerHTML = "Prev"
     prevButton.type = "button"
-    prevButton.onclick = function() { prevQuestion(problems) }
+    prevButton.onclick = function () { prevQuestion(problems, type, table["attributes"]) }
     prevButton.style.display = "none"
 
     const nextButton = document.createElement('button')
     nextButton.id = "nextButton"
     nextButton.innerHTML = "Next"
     nextButton.type = "button"
-    nextButton.onclick = function() { nextQuestion(problems) }
+    nextButton.onclick = function () { nextQuestion(problems, type, table["attributes"]) }
 
     const feedbackDiv = document.createElement('div')
     feedbackDiv.id = 'feedbackDiv'
@@ -606,11 +621,9 @@ function createMCQuiz(problems, table) {
     const canvas = document.querySelector('#canvas2')
     canvas.appendChild(answerDiv)
 
-    createTable(table)
-
 }
 
-function nextQuestion(problems) {
+function nextQuestion(problems, type, attr) {
     // display the prev button if you're pressing next on the very first question 
     if (quizIndex == 0) {
         const prevButton = document.querySelector('#prevButton')
@@ -618,12 +631,12 @@ function nextQuestion(problems) {
     }
 
     quizIndex++
-    changeQuestion(problems)
+    changeQuestion(problems, type, attr)
     // clear the feedback when switching questions 
     const feedbackDiv = document.querySelector('#feedbackDiv')
     feedbackDiv.className = ''
     feedbackDiv.innerHTML = ""
-    
+
     // if got to very last question, don't display the next button
     if (quizIndex == problems.length - 1) {
         const nextButton = document.querySelector('#nextButton')
@@ -631,7 +644,7 @@ function nextQuestion(problems) {
     }
 }
 
-function prevQuestion(problems) {
+function prevQuestion(problems, type, attr) {
     // display the prev button if you're pressing prev on the very last question 
     if (quizIndex == problems.length - 1) {
         const nextButton = document.querySelector('#nextButton')
@@ -639,7 +652,7 @@ function prevQuestion(problems) {
     }
 
     quizIndex--
-    changeQuestion(problems)
+    changeQuestion(problems, type, attr)
     // clear the feedback when switching questions 
     const feedbackDiv = document.querySelector('#feedbackDiv')
     feedbackDiv.className = ''
@@ -652,41 +665,56 @@ function prevQuestion(problems) {
     }
 }
 
-function changeQuestion(problems) {
+function changeQuestion(problems, type, attr) {
 
     const questionDiv = document.querySelector('#questionDiv')
     questionDiv.innerHTML = `<p>${problems[quizIndex]["question"]}</p>`
 
-    const answeringForm = document.querySelector('#answeringForm')
-    
-    let count = 0
-    for (let choice of problems[quizIndex]["choices"]) {
+    if (type == "MC") {
 
-        const inputElement = document.createElement('input')
-        inputElement.type = "radio"
-        inputElement.value = choice
-        inputElement.id = choice
-        inputElement.name = "choice"
+        const answeringForm = document.querySelector('#answeringForm')
 
-        const labelElement = document.createElement('label')
-        labelElement.setAttribute("for", choice)
-        labelElement.innerHTML = `${choice}<br>`
+        let count = 0
+        for (let choice of problems[quizIndex]["choices"]) {
 
-        // need to replace the prev children that were already there 
-        answeringForm.replaceChild(inputElement, answeringForm.childNodes[count++])
-        answeringForm.replaceChild(labelElement, answeringForm.childNodes[count++])
+            const inputElement = document.createElement('input')
+            inputElement.type = "radio"
+            inputElement.value = choice
+            inputElement.id = choice
+            inputElement.name = "choice"
+
+            const labelElement = document.createElement('label')
+            labelElement.setAttribute("for", choice)
+            labelElement.innerHTML = `${choice}<br>`
+
+            // need to replace the prev children that were already there 
+            answeringForm.replaceChild(inputElement, answeringForm.childNodes[count++])
+            answeringForm.replaceChild(labelElement, answeringForm.childNodes[count++])
+
+        }
+
+    }
+
+    // clearing the inputs in the table 
+    else {
+        
+        Array.from(Array(3)).forEach((x, i) => {
+            for (let attribute of attr) {
+                document.querySelector(`#${attribute + i}`).value = ""
+            }
+        })
 
     }
 
 }
 
-// check to see if the given answer is right or wrong
-function checkAnswer(answer) {   
+// check to see if the given answer is right or wrong for MC
+function checkAnswer(answer) {
 
     const answeringForm = document.querySelector('#answeringForm')
     const data = Object.fromEntries(new FormData(answeringForm).entries())
     const feedbackDiv = document.querySelector('#feedbackDiv')
-    
+
     // if no answer was given
     if (Object.keys(data).length == 0) {
         feedbackDiv.innerHTML = "Please answer the question above!"
@@ -703,26 +731,106 @@ function checkAnswer(answer) {
     else {
         feedbackDiv.innerHTML = "Correct answer. Good job!"
         feedbackDiv.classList.remove('feedback-incorrect')
-        feedbackDiv.classList.add('feedback-correct')   
+        feedbackDiv.classList.add('feedback-correct')
     }
 
 }
 
-function createTable(table) {
+// check to see if the given answer is right or wrong for MI
+function checkAnswerMI(FDSet, attributes) {
 
-    makeTable()
-    makeHeadings(table["attributes"])
-    makeData(table["attributes"], table["data"])
+    // will contain all the form values in an obj
+    // the key is the attr + row number (A1, B2), the value will be the value from the table
+    const formValues = new Object()
+    // will be false if any input is empty 
+    let validAnswer = true
+
+    const feedbackDiv = document.querySelector('#feedbackDiv')
+
+    // populating formValues obj
+    Array.from(Array(3)).forEach((x, i) => {
+        for (let attribute of attributes) {
+            const value = document.querySelector(`#${attribute + i}`).value
+            if (!value) validAnswer = false
+            formValues[`${attribute + i}`] = value
+        }
+    })
+
+    if (!validAnswer) {
+        feedbackDiv.innerHTML = "Please fill in the table properly!"
+        feedbackDiv.classList.remove('feedback-correct')
+        feedbackDiv.classList.add('feedback-incorrect')
+        return
+    }
+
+    let correct = true
+
+    // for each FD
+    for (let FD of FDSet) {
+
+        let FDStrings = {}
+
+        const splitFD = FD.split("->")
+
+        // for each row of the table
+        Array.from(Array(3)).forEach((x, i) => {
+
+            let leftFDString = ""
+
+            for (let letter of splitFD[0]) {
+                leftFDString += formValues[`${letter + i}`]
+                leftFDString += ","
+            }
+
+            let rightFDString = ""
+
+            for (let letter of splitFD[1]) {
+                rightFDString += formValues[`${letter + i}`]
+                rightFDString += ","
+            }
+
+            // if the LHS already exists, check if the RHS is equal, if not equal, it's not a valid instance 
+            if (leftFDString in FDStrings && FDStrings[leftFDString] != rightFDString) correct = false
+            else FDStrings[leftFDString] = rightFDString
+
+        })
+
+        if (!correct) break
+
+    }
+
+    // do this for questions asking to violate the FD's
+    correct = !correct
+
+    if (correct) {
+        feedbackDiv.innerHTML = "Correct answer. Good job!"
+        feedbackDiv.classList.remove('feedback-incorrect')
+        feedbackDiv.classList.add('feedback-correct')
+    }
+
+    else {
+        feedbackDiv.innerHTML = "Incorrect answer. Please try again!"
+        feedbackDiv.classList.remove('feedback-correct')
+        feedbackDiv.classList.add('feedback-incorrect')
+    }
 
 }
 
-function makeTable() {
+function createTable(table, type) {
+
+    makeTable(type)
+    makeHeadings(table["attributes"], type)
+    makeData(table["attributes"], table["data"], type)
+
+}
+
+function makeTable(type) {
 
     const table = document.createElement('table')
-    table.id = 'table'
+    table.id = `table${type}`
 
     const tableDiv = document.createElement('div')
-    tableDiv.id = 'tableDiv'
+    tableDiv.id = `tableDiv${type}`
 
     const canvas = document.querySelector('#canvas2')
     tableDiv.appendChild(table)
@@ -730,7 +838,7 @@ function makeTable() {
 
 }
 
-function makeHeadings(attributes) {
+function makeHeadings(attributes, type) {
 
     const thead = document.createElement('thead')
     const headingRow = document.createElement('tr')
@@ -741,32 +849,61 @@ function makeHeadings(attributes) {
         headingRow.appendChild(headingCol)
     }
 
-    const table = document.querySelector('#table')
+    const table = document.querySelector(`#table${type}`)
     thead.appendChild(headingRow)
     table.appendChild(thead)
 
 }
 
 // populate the rows of the table
-function makeData(attributes, data) {
+function makeData(attributes, data, type) {
 
     const tbody = document.createElement('tbody')
 
-    for (let row of data) {
+    if (type == "MC") {
 
-        const dataRow = document.createElement('tr')
+        for (let row of data) {
 
-        for (let attribute of attributes) {
-            const dataCol = document.createElement('td')
-            dataCol.innerHTML = row[attribute]
-            dataRow.appendChild(dataCol)
+            const dataRow = document.createElement('tr')
+
+            for (let attribute of attributes) {
+                const dataCol = document.createElement('td')
+                dataCol.innerHTML = row[attribute]
+                dataRow.appendChild(dataCol)
+            }
+
+            tbody.appendChild(dataRow)
+
         }
-
-        tbody.appendChild(dataRow)
 
     }
 
-    const table = document.querySelector('#table')
+    else if (type == "MI") {
+
+        const form = document.createElement("form")
+
+        Array.from(Array(3)).forEach((x, i) => {
+
+            const dataRow = document.createElement('tr')
+
+            for (let attribute of attributes) {
+                const dataCol = document.createElement('td')
+                const input = document.createElement('input')
+                input.setAttribute("type", "text")
+                input.setAttribute("name", `${attribute + i}`)
+                input.setAttribute("id", `${attribute + i}`)
+                input.classList.add("tableInput")
+                dataCol.appendChild(input)
+                dataRow.appendChild(dataCol)
+            }
+
+            tbody.appendChild(dataRow)
+
+        })
+
+    }
+
+    const table = document.querySelector(`#table${type}`)
     table.appendChild(tbody)
 
 }
