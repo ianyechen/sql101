@@ -1,0 +1,50 @@
+#logoDiv {
+    width: 50%;
+    float: left;
+    height: 80vh;
+    margin-top: 10vh;
+    margin-bottom: 10vh;
+}
+
+#tableDiv {
+    width: 50%;
+    float: right;
+    height: 40vh;
+    margin-top: 28vh;
+    margin-bottom: 28vh;
+    margin-right: 0;
+    margin-left: 0;
+}
+
+#logoImg {
+    width: 50%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#logoText {
+    text-align: center;
+    font-family: 'Noto Sans', sans-serif;
+    font-size: 100px;
+    margin-top: 0;
+}
+
+#tableHome {
+    width: 50%;
+    margin: 0 35% 0 15%;
+    border: 1px solid black;
+    border-collapse: collapse;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    font-size: 3vh;
+    min-width: 10vw;
+}
+
+#tableHome tr {
+    height: 10vh;
+}
+
+#tableHome th, #tableHome td {
+    min-width: 10vw;
+}

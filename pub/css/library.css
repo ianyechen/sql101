@@ -95,24 +95,21 @@ button:disabled {
     text-align: center;
 }
 
-#tableMC thead tr, #tableMI thead tr {
+thead tr {
     background-color: #5680e9;
     color: #ffffff;
 }
 
-#tableMC th, #tableMC td, #tableMI th, #tableMI td  {
+th, td {
     padding: 1% 2%;
+    max-width: 100px;
 }
 
-#tableMI th, #tableMI td  {
-    max-width: 100px
-}
-
-#tableMC tbody tr:last-of-type, #tableMI tbody tr:last-of-type {
+tbody tr:last-of-type {
     border-bottom: 3px solid #5680e9;
 }
 
-#tableMC tbody tr:nth-of-type(even), #tableMI tbody tr:nth-of-type(even) {
+ tbody tr:nth-of-type(even) {
     background-color: #c1c8e4;
 }
 
