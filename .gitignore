@@ -1,2 +1,5 @@
 /.vscode
 /node_modules
+/pub/js/package1.js
+/pub/js/package2.js
+/pub/js/beforePackage.js

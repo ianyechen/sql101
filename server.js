@@ -25,7 +25,7 @@ app.get('/', (req, res) => {
 	//res.send('This should be the root route!')
 
 	//sending some HTML
-    res.sendFile(path.join(__dirname+'/examples.html'))
+    res.sendFile(path.join(__dirname+'/pub/html/examples.html'))
 })
 
 app.get('/examples.html', (req, res) => {
@@ -33,7 +33,7 @@ app.get('/examples.html', (req, res) => {
 	//res.send('This should be the root route!')
 
 	//sending some HTML
-    res.sendFile(path.join(__dirname+'/examples.html'))
+    res.sendFile(path.join(__dirname+'/pub/html/examples.html'))
 })
 
 // Error codes
