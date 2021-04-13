@@ -36,6 +36,10 @@ app.get('/examples_qm.html', (req, res) => {
     res.sendFile(path.join(__dirname+'/pub/html/examples_qm.html'))
 })
 
+app.get('/examples_av.html', (req, res) => {
+    res.sendFile(path.join(__dirname+'/pub/html/examples_av.html'))
+})
+
 // Error codes
 app.get('/problem', (req, res) => {
 	// You can indicate a status code to send back
