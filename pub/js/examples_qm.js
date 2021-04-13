@@ -7,10 +7,10 @@ function examples() {
 
     // const attributeSet = "AB"
     // const FDSet = ["AB->C", "BC->AD", "D->E", "CF->B"]
-    const attributeSet = "C"
-    const FDSet = ["AC->F", "CEF->B", "C->D", "DC->A"]
+    // const attributeSet = "C"
+    // const FDSet = ["AC->F", "CEF->B", "C->D", "DC->A"]
 
-    sql.animationClosure(attributeSet, FDSet, 500)
+    // sql.animationClosure(attributeSet, FDSet, 500)
 
     const tableMC = {
         "attributes": ["sID", "oID", "grade"],
@@ -48,28 +48,28 @@ function examples() {
         },
     ]
 
-    // sql.createMCQuiz(problemsMC, tableMC)
+    sql.createMCQuiz(problemsMC, tableMC)
 
-    const problems = [
-        {
-            "question": "Given the following FDs, make an instance of the relation that violates the set of FDs. S = { A -> BC, B -> D }",
-            "FDSet": ["A->BC", "B->D"]
-        },
-        {
-            "question": "Given the following FDs, make an instance of the relation that violates the set of FDs. S = { BC -> D, AE -> B }",
-            "FDSet": ["BC->D", "AE->B"]
-        },
-        {
-            "question": "Given the following FDs, make an instance of the relation that violates the set of FDs. S = { A -> B, C -> D, B -> E }",
-            "FDSet": ["A->B", "C->D", "B->E"]
-        },
-    ]
+    // const problems = [
+    //     {
+    //         "question": "Given the following FDs, make an instance of the relation that violates the set of FDs. S = { A -> BC, B -> D }",
+    //         "FDSet": ["A->BC", "B->D"]
+    //     },
+    //     {
+    //         "question": "Given the following FDs, make an instance of the relation that violates the set of FDs. S = { BC -> D, AE -> B }",
+    //         "FDSet": ["BC->D", "AE->B"]
+    //     },
+    //     {
+    //         "question": "Given the following FDs, make an instance of the relation that violates the set of FDs. S = { A -> B, C -> D, B -> E }",
+    //         "FDSet": ["A->B", "C->D", "B->E"]
+    //     },
+    // ]
 
-    const table = {
-        "attributes": ["A", "B", "C", "D", "E"],
-    }
+    // const table = {
+    //     "attributes": ["A", "B", "C", "D", "E"],
+    // }
 
-    sql.createMakeInstanceQuiz(problems, table)
+    // sql.createMakeInstanceQuiz(problems, table)
 
 }
 

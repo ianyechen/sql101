@@ -4,9 +4,15 @@ body {
     font-family: 'Alegreya Sans', sans-serif;
 }
 
+#body {
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
 #canvas {
     position: relative;
     margin-bottom: 5%;
+    margin-top: 5%;
 }
 
 #canvas2 {
@@ -137,4 +143,15 @@ tbody tr:last-of-type {
 /* this is for the input field that will be for the MI type questions */
 .tableInput {
     max-width: 60%;
+}
+
+#feedbackDiv {
+    min-height: 10vh;
+}
+
+#code {
+    background-color: #f5f2f0;
+    border-radius: 25px;
+    background: #f5f2f0;
+    padding: 20px;
 }

@@ -28,12 +28,12 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname+'/pub/html/home.html'))
 })
 
-app.get('/examples.html', (req, res) => {
-	// sending a string
-	//res.send('This should be the root route!')
+app.get('/home.html', (req, res) => {
+    res.sendFile(path.join(__dirname+'/pub/html/home.html'))
+})
 
-	//sending some HTML
-    res.sendFile(path.join(__dirname+'/pub/html/examples.html'))
+app.get('/examples_qm.html', (req, res) => {
+    res.sendFile(path.join(__dirname+'/pub/html/examples_qm.html'))
 })
 
 // Error codes

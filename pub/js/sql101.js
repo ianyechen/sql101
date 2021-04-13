@@ -560,10 +560,11 @@
 
                 const labelElement = document.createElement('label')
                 labelElement.setAttribute("for", choice)
-                labelElement.innerHTML = `${choice}<br>`
+                labelElement.innerHTML = `${choice}`
 
                 answeringForm.appendChild(inputElement)
                 answeringForm.appendChild(labelElement)
+                answeringForm.appendChild(document.createElement("br"))
 
             }
         }
@@ -599,7 +600,7 @@
         answerDiv.appendChild(answeringForm)
         answerDiv.appendChild(feedbackDiv)
 
-        const canvas = document.querySelector('#canvas2')
+        const canvas = document.querySelector('#canvas')
         canvas.appendChild(answerDiv)
 
     }
@@ -666,11 +667,12 @@
 
                 const labelElement = document.createElement('label')
                 labelElement.setAttribute("for", choice)
-                labelElement.innerHTML = `${choice}<br>`
+                labelElement.innerHTML = `${choice}`
 
                 // need to replace the prev children that were already there 
                 answeringForm.replaceChild(inputElement, answeringForm.childNodes[count++])
                 answeringForm.replaceChild(labelElement, answeringForm.childNodes[count++])
+                count++ // to skip the <br> element
 
             }
 
@@ -813,7 +815,7 @@
         const tableDiv = document.createElement('div')
         tableDiv.id = `tableDiv${type}`
 
-        const canvas = document.querySelector('#canvas2')
+        const canvas = document.querySelector('#canvas')
         tableDiv.appendChild(table)
         canvas.appendChild(tableDiv)
 
