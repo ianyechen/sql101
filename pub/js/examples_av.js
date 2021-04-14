@@ -30,7 +30,7 @@ function examples() {
         ]
     }
 
-    sql.animationNaturalJoin(table1, table2)
+    sql.animationNaturalJoin(table1, table2, 500)
 
 }
 

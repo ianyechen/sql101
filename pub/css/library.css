@@ -29,7 +29,7 @@ body {
 }
 
 /* contains the inputs such as the attributeSet and the FDSet */
-#inputDiv {
+#inputDivClosure {
     width: 50%;
     display: inline-block;
     top: 50%;
@@ -38,11 +38,16 @@ body {
     position: absolute;
 }
 
+#inputDivNaturalJoin {
+    width: 50%;
+    margin-bottom: 5%;
+}
+
 .algorithm {
     padding-left: 25%
 }
 
-#buttonsDiv, #attributeSetDiv, #FDSetDiv {
+#buttonsDivClosure, #attributeSetDiv, #FDSetDiv {
     margin-left: 15%;
 }
 

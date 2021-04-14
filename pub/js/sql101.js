@@ -78,7 +78,7 @@
 
     function displayFDSet(FDSet) {
 
-        const inputDiv = document.querySelector('#inputDiv')
+        const inputDiv = document.querySelector('#inputDivClosure')
         const FDSetDiv = document.createElement('div')
         FDSetDiv.id = "FDSetDiv"
 
@@ -99,7 +99,7 @@
 
     function displayAttributeSet(attributeSet) {
 
-        const inputDiv = document.querySelector('#inputDiv')
+        const inputDiv = document.querySelector('#inputDivClosure')
         const attributeSetDiv = document.createElement('div')
         attributeSetDiv.id = "attributeSetDiv"
 
@@ -338,7 +338,8 @@
     function fadeAnimationEnd(e) {
 
         this.style.opacity = 1 // want to show closures after each animation "step", no need to hide it anymore 
-        if (animationIndex == animationArr.length) return // want to keep the last animation (FD going back)
+        // want to keep the last animation (FD going back), but don't keep for tables (natural join animations)
+        if (!this.id.includes("table") && animationIndex == animationArr.length) return
 
         // after fadeIn has done, you want to fadeOut
         if (e.animationName == "fadeIn") {
@@ -356,6 +357,18 @@
         else if (e.animationName == "fadeInInfo") {
             setTimeout(() => {
                 this.style.animation = `fadeOutInfo ${animationSpeed}ms linear forwards`
+            }, animationSpeed)
+        }
+
+        else if (e.animationName == "fadeInHeader") {
+            setTimeout(() => {
+                this.style.animation = `fadeOutHeader ${animationSpeed}ms linear forwards`
+            }, animationSpeed)
+        }
+
+        else if (e.animationName == "fadeInErrHeader") {
+            setTimeout(() => {
+                this.style.animation = `fadeOutErrHeader ${animationSpeed}ms linear forwards`
             }, animationSpeed)
         }
 
@@ -400,7 +413,7 @@
 
     }
 
-    function displayInput(attributeSet, FDSet) {
+    function displayInput(attributeSet, FDSet, type) {
 
         const inputDiv = document.createElement('div')
         const buttonsDiv = document.createElement('div')
@@ -413,8 +426,8 @@
 
         const canvas = document.querySelector('#canvas')
 
-        inputDiv.id = "inputDiv"
-        buttonsDiv.id = "buttonsDiv"
+        inputDiv.id = `inputDiv${type}`
+        buttonsDiv.id = `buttonsDiv${type}`
 
         speedUpButton.id = "speedUpButton"
         speedDownButton.id = "speedDownButton"
@@ -448,8 +461,10 @@
         inputDiv.appendChild(buttonsDiv)
         canvas.appendChild(inputDiv)
 
-        displayAttributeSet(attributeSet)
-        displayFDSet(FDSet)
+        if (type == "Closure") {
+            displayAttributeSet(attributeSet)
+            displayFDSet(FDSet)
+        }
 
     }
 
@@ -829,6 +844,7 @@
         for (let attribute of attributes) {
             const headingCol = document.createElement('th')
             headingCol.innerHTML = attribute
+            headingCol.id = `tableHeader${attribute}_${idName}`
             headingRow.appendChild(headingCol)
         }
 
@@ -838,20 +854,40 @@
 
     }
 
+    // adds row to the passed in tbody, used for animating joining tables 
+    // need to do this because the cell values should be hidden, but still need it to be in the DOM
+    function addRowToTable(tbody, row, attributes, idName, index) {
+
+        const dataRow = document.createElement('tr')
+
+        for (let attribute of attributes) {
+            const dataCol = document.createElement('td')
+            dataCol.innerHTML = row[attribute]
+            dataCol.id = `tableRow${attribute + index}_${idName}`
+            dataCol.style.opacity = 0 // hides the table cells initially 
+            dataRow.appendChild(dataCol)
+        }
+
+        tbody.appendChild(dataRow)
+
+    }
+
     // populate the rows of the table
     function makeData(attributes, data, type, idName) {
 
         const tbody = document.createElement('tbody')
+        tbody.id = `tbody_${idName}`
 
-        if (type == "MC") {
+        if (type == "MC" && data) {
 
-            for (let row of data) {
+            for (let [index, row] of data.entries()) {
 
                 const dataRow = document.createElement('tr')
 
                 for (let attribute of attributes) {
                     const dataCol = document.createElement('td')
                     dataCol.innerHTML = row[attribute]
+                    dataCol.id = `tableRow${attribute + index}_${idName}`
                     dataRow.appendChild(dataCol)
                 }
 
@@ -861,7 +897,7 @@
 
         }
 
-        else if (type == "MI") {
+        else if (type == "MI" && data) {
 
             const form = document.createElement("form")
 
@@ -904,10 +940,15 @@
         for (let attr of attr2) attrAfterJoin.add(attr)
         attrAfterJoin = Array.from(attrAfterJoin)
 
+        answerTable["attributes"] = attrAfterJoin
+        createTable(answerTable, "MC", "Join3")
+        const tbody = document.querySelector(`#tbody_Join3`)
+
         let commonAttr = []
         commonAttr = attr1.filter(attr => attr2.includes(attr))
 
         let dataAfterJoin = []
+        let indexNew = 0 // number of rows for the joined table (Join3), starts at 0 
 
         // for each row in table1
         data1.forEach((value1, index1) => {
@@ -925,13 +966,133 @@
                 // if equal, there is a match and we need to insert this new row 
                 if (attrStr1 == attrStr2) {
 
+                    // for each row in Join1, need to highlight the common attr and their values on both tables 
+                    commonAttr.forEach(attr => {
+
+                        let animationObj = undefined
+
+                        const table1Attr = document.querySelector(`#tableHeader${attr}_Join1`)
+                        animationObj = {
+                            "element": table1Attr,
+                            "animation_name": `fadeInHeader speedms linear forwards`,
+                            "animation_event": fadeAnimationEnd
+                        }
+                        arrayToPush.push(animationObj)
+
+                        const table1Value = document.querySelector(`#tableRow${attr + index1}_Join1`)
+                        animationObj = {
+                            "element": table1Value,
+                            "animation_name": `fadeIn speedms linear forwards`,
+                            "animation_event": fadeAnimationEnd
+                        }
+                        arrayToPush.push(animationObj)
+
+                        const table2Attr = document.querySelector(`#tableHeader${attr}_Join2`)
+                        animationObj = {
+                            "element": table2Attr,
+                            "animation_name": `fadeInHeader speedms linear forwards`,
+                            "animation_event": fadeAnimationEnd
+                        }
+                        arrayToPush.push(animationObj)
+
+                        const table2Value = document.querySelector(`#tableRow${attr + index2}_Join2`)
+                        animationObj = {
+                            "element": table2Value,
+                            "animation_name": `fadeIn speedms linear forwards`,
+                            "animation_event": fadeAnimationEnd
+                        }
+                        arrayToPush.push(animationObj)
+
+                    })
+
+                    pushAnimationToArr()
+
                     let newRow = new Object()
-                    attr1.forEach(attr => newRow[attr] = value1[attr])
+
+                    attr1.forEach(attr => {
+                        newRow[attr] = value1[attr]
+                        // animations, highlights the row when joining 
+                        const table1Value = document.querySelector(`#tableRow${attr + index1}_Join1`)
+                        animationObj = {
+                            "element": table1Value,
+                            "animation_name": `fadeIn speedms linear forwards`,
+                            "animation_event": fadeAnimationEnd
+                        }
+                        arrayToPush.push(animationObj)
+                    })
+
                     attr2.forEach(attr => {
                         // add to newRow if it's not already in it, or if there wasn't any common attr (in this case, it's just cross join)
                         if (!(attr in newRow) || commonAttr.length == 0) newRow[attr] = value2[attr]
+                        // animations, highlights the row when joining 
+                        const table2Value = document.querySelector(`#tableRow${attr + index2}_Join2`)
+                        animationObj = {
+                            "element": table2Value,
+                            "animation_name": `fadeIn speedms linear forwards`,
+                            "animation_event": fadeAnimationEnd
+                        }
+                        arrayToPush.push(animationObj)
                     })
+
                     dataAfterJoin.push(newRow)
+                    addRowToTable(tbody, newRow, attrAfterJoin, "Join3", indexNew)
+
+                    for (const [key, value] of Object.entries(newRow)) {
+                        const table3Value = document.querySelector(`#tableRow${key + indexNew}_Join3`)
+                        animationObj = {
+                            "element": table3Value,
+                            "animation_name": `fadeIn speedms linear forwards`,
+                            "animation_event": fadeAnimationEnd
+                        }
+                        arrayToPush.push(animationObj)
+                    }
+
+                    pushAnimationToArr()
+                    indexNew++
+
+                }
+
+                else {
+
+                    commonAttr.forEach(attr => {
+
+                        let animationObj = undefined
+
+                        const table1Attr = document.querySelector(`#tableHeader${attr}_Join1`)
+                        animationObj = {
+                            "element": table1Attr,
+                            "animation_name": `fadeInErrHeader speedms linear forwards`,
+                            "animation_event": fadeAnimationEnd
+                        }
+                        arrayToPush.push(animationObj)
+
+                        const table1Value = document.querySelector(`#tableRow${attr + index1}_Join1`)
+                        animationObj = {
+                            "element": table1Value,
+                            "animation_name": `fadeInErr speedms linear forwards`,
+                            "animation_event": fadeAnimationEnd
+                        }
+                        arrayToPush.push(animationObj)
+
+                        const table2Attr = document.querySelector(`#tableHeader${attr}_Join2`)
+                        animationObj = {
+                            "element": table2Attr,
+                            "animation_name": `fadeInErrHeader speedms linear forwards`,
+                            "animation_event": fadeAnimationEnd
+                        }
+                        arrayToPush.push(animationObj)
+
+                        const table2Value = document.querySelector(`#tableRow${attr + index2}_Join2`)
+                        animationObj = {
+                            "element": table2Value,
+                            "animation_name": `fadeInErr speedms linear forwards`,
+                            "animation_event": fadeAnimationEnd
+                        }
+                        arrayToPush.push(animationObj)
+
+                    })
+
+                    pushAnimationToArr()
 
                 }
 
@@ -939,7 +1100,6 @@
 
         })
 
-        answerTable["attributes"] = attrAfterJoin
         answerTable["data"] = dataAfterJoin
 
     }
@@ -956,7 +1116,7 @@
             let closureArr = [] // the array that will store the closures 
             splitFD(FDSet) // splits the RHS of FDs if necessary 
 
-            displayInput(attributeSet, FDSet)
+            displayInput(attributeSet, FDSet, "Closure")
             displayAlgorithm("Closure")
 
             // first compute the algorithm and store all information before showing animation
@@ -964,15 +1124,17 @@
 
         },
 
-        animationNaturalJoin: function (table1, table2) {
+        animationNaturalJoin: function (table1, table2, speed) {
+
+            animationSpeed = speed
 
             let answerTable = {}
-            natrualJoinTables(table1, table2, answerTable)
 
+            displayInput([], [], "NaturalJoin")
             createTable(table1, "MC", "Join1")
             createTable(table2, "MC", "Join2")
-            createTable(answerTable, "MC", "Join3")
-            
+            natrualJoinTables(table1, table2, answerTable)
+
         },
 
         // the quiz where the user has to make an instance to violate for example a set of FDs
