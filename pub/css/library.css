@@ -80,7 +80,7 @@ button:disabled {
     position: absolute;
 }
 
-#tableDivMC, #tableDivMI {
+#tableDivMC_MC, #tableDivMI_MI {
     width: 50%;
     display: inline-block;
     left: 50%;
@@ -92,13 +92,23 @@ button:disabled {
 }
 
 /* used for any tables created for the quiz maker */
-#tableMC, #tableMI {
+#tableMC_MC, #tableMI_MI, #tableMC_Join1, #tableMC_Join2, #tableMC_Join3 {
     width: 50%;
     margin: 0 25% 0 25%;
     border: 1px solid black;
     border-collapse: collapse;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
     text-align: center;
+}
+
+#tableDivMC_Join1, #tableDivMC_Join2 {
+    width: 50%;
+    display: inline-block;
+    position: relative;
+}
+
+#tableDivMC_Join3 {
+    margin-top: 5%;
 }
 
 thead tr {

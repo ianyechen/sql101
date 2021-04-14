@@ -799,21 +799,21 @@
 
     }
 
-    function createTable(table, type) {
+    function createTable(table, type, idName) {
 
-        makeTable(type)
-        makeHeadings(table["attributes"], type)
-        makeData(table["attributes"], table["data"], type)
+        makeTable(type, idName)
+        makeHeadings(table["attributes"], type, idName)
+        makeData(table["attributes"], table["data"], type, idName)
 
     }
 
-    function makeTable(type) {
+    function makeTable(type, idName) {
 
         const table = document.createElement('table')
-        table.id = `table${type}`
+        table.id = `table${type}_${idName}`
 
         const tableDiv = document.createElement('div')
-        tableDiv.id = `tableDiv${type}`
+        tableDiv.id = `tableDiv${type}_${idName}`
 
         const canvas = document.querySelector('#canvas')
         tableDiv.appendChild(table)
@@ -821,7 +821,7 @@
 
     }
 
-    function makeHeadings(attributes, type) {
+    function makeHeadings(attributes, type, idName) {
 
         const thead = document.createElement('thead')
         const headingRow = document.createElement('tr')
@@ -832,14 +832,14 @@
             headingRow.appendChild(headingCol)
         }
 
-        const table = document.querySelector(`#table${type}`)
+        const table = document.querySelector(`#table${type}_${idName}`)
         thead.appendChild(headingRow)
         table.appendChild(thead)
 
     }
 
     // populate the rows of the table
-    function makeData(attributes, data, type) {
+    function makeData(attributes, data, type, idName) {
 
         const tbody = document.createElement('tbody')
 
@@ -886,10 +886,64 @@
 
         }
 
-        const table = document.querySelector(`#table${type}`)
+        const table = document.querySelector(`#table${type}_${idName}`)
         table.appendChild(tbody)
 
     }
+
+    // calculates the resulting table after a natural join of two tables 
+    function natrualJoinTables(table1, table2, answerTable) {
+
+        const attr1 = table1["attributes"]
+        const attr2 = table2["attributes"]
+        const data1 = table1["data"]
+        const data2 = table2["data"]
+
+        let attrAfterJoin = new Set()
+        for (let attr of attr1) attrAfterJoin.add(attr)
+        for (let attr of attr2) attrAfterJoin.add(attr)
+        attrAfterJoin = Array.from(attrAfterJoin)
+
+        let commonAttr = []
+        commonAttr = attr1.filter(attr => attr2.includes(attr))
+
+        let dataAfterJoin = []
+
+        // for each row in table1
+        data1.forEach((value1, index1) => {
+
+            let attrStr1 = ""
+            commonAttr.forEach(value => attrStr1 += `${value1[value]},`)
+
+            // for each row in table2
+            data2.forEach((value2, index2) => {
+
+                let attrStr2 = ""
+                commonAttr.forEach(value => attrStr2 += `${value2[value]},`)
+
+                // comparing the two strings which contain a string version (value,value) of the common attributes
+                // if equal, there is a match and we need to insert this new row 
+                if (attrStr1 == attrStr2) {
+
+                    let newRow = new Object()
+                    attr1.forEach(attr => newRow[attr] = value1[attr])
+                    attr2.forEach(attr => {
+                        // add to newRow if it's not already in it, or if there wasn't any common attr (in this case, it's just cross join)
+                        if (!(attr in newRow) || commonAttr.length == 0) newRow[attr] = value2[attr]
+                    })
+                    dataAfterJoin.push(newRow)
+
+                }
+
+            })
+
+        })
+
+        answerTable["attributes"] = attrAfterJoin
+        answerTable["data"] = dataAfterJoin
+
+    }
+
     /* End of private properties/functions */
 
     SQL101.prototype = {
@@ -910,16 +964,27 @@
 
         },
 
+        animationNaturalJoin: function (table1, table2) {
+
+            let answerTable = {}
+            natrualJoinTables(table1, table2, answerTable)
+
+            createTable(table1, "MC", "Join1")
+            createTable(table2, "MC", "Join2")
+            createTable(answerTable, "MC", "Join3")
+            
+        },
+
         // the quiz where the user has to make an instance to violate for example a set of FDs
         createMakeInstanceQuiz: function (problems, table) {
             createAnswerDiv(problems, "MI", table)
-            createTable(table, "MI")
+            createTable(table, "MI", "MI")
         },
 
         // the quiz where the user has to make a choice for MC questions 
         createMCQuiz: function (problems, table) {
             createAnswerDiv(problems, "MC", table)
-            createTable(table, "MC")
+            createTable(table, "MC", "MC")
         },
 
     }
