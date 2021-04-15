@@ -1,0 +1,114 @@
+/* for titles of the examples (multiple choice, make instance) */
+h4 {
+    margin-top: 5%;
+}
+
+/* holds the answerDiv and tableDiv */
+#canvas_MC, #canvas_MI  {
+    position: relative;
+    margin-bottom: 5%;
+    margin-top: 5%;
+}
+
+#canvas_MI {
+    min-height: 45vh;
+}
+
+#codeDiv_MC, #codeDiv_MI {
+    background-color: #f5f2f0;
+    border-radius: 25px;
+    background: #f5f2f0;
+    padding: 20px;
+}
+
+#code_MC, #code_MI {
+    max-height: 50vh;
+    overflow: scroll;
+}
+
+/* contains the instructionsDiv, questionDiv, answeringForm, and feedbackDiv */
+#answerDiv_MC, #answerDiv_MI {
+    width: 50%;
+    float: left;
+}
+
+#instructionsDiv_MC, #answeringForm_MC, #questionDiv_MC, #instructionsDiv_MI, #answeringForm_MI, #questionDiv_MI {
+    padding-left: 15%;
+}
+
+#tableDivMC_MC, #tableDivMI_MI {
+    width: 50%;
+    display: inline-block;
+}
+
+/* used for any tables created for the quiz maker */
+#tableMC_MC, #tableMI_MI, #tableMC_Join1, #tableMC_Join2, #tableMC_Join3 {
+    width: 50%;
+    margin: 0 25% 0 25%;
+    border: 1px solid black;
+    border-collapse: collapse;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    text-align: center;
+}
+
+#tableMI_MI {
+    margin: 0 30% 0 20%;
+}
+
+thead tr {
+    background-color: #5680e9;
+    color: #ffffff;
+}
+
+th, td {
+    padding: 1% 2%;
+    max-width: 80px;
+}
+
+tbody tr:last-of-type {
+    border-bottom: 3px solid #5680e9;
+}
+
+tbody tr:nth-of-type(even) {
+    background-color: #c1c8e4;
+}
+
+/* used for both the algorithm visualizer and the quiz maker */
+.button_MC, .button_MI {
+    min-height: 5vh;
+    min-width: 5vw;
+    margin: 1%;
+    margin-top: 5%;
+    background-color: #5680e9;
+    text-align: center;
+    border: 1px solid rgb(0, 0, 0);
+    text-decoration: none;
+    cursor: pointer;
+    color: white;
+    padding: 1%;
+}
+
+#feedbackDiv_MC, #feedbackDiv_MI {
+    min-height: 10vh;
+}
+
+/* used for feedback when the user submits their responses to the question */
+.feedback-incorrect {
+    background-color: rgb(255, 181, 181);
+    margin-left: 15%;
+    margin-top: 5%;
+    display: inline-block;
+    border-radius: 25px;
+    border: 2px solid rgb(233, 140, 140);
+    padding: 3%;
+}
+
+.feedback-correct {
+    background-color: rgb(190, 255, 181);
+    margin-left: 15%;
+    margin-top: 5%;
+    display: inline-block;
+    border-radius: 25px;
+    border: 2px solid rgb(171, 230, 163);
+    padding: 3%;
+}

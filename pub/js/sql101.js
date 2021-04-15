@@ -548,21 +548,21 @@
     }
 
     // creates the answering part of the quiz maker 
-    function createAnswerDiv(problems, type, table) {
+    function createAnswerDiv(problems, type, table, idName) {
 
         const answerDiv = document.createElement('div')
-        answerDiv.id = 'answerDiv'
+        answerDiv.id = `answerDiv_${idName}`
 
         const instructionsDiv = document.createElement('div')
         instructionsDiv.innerHTML = "<h3>Please choose the best answer for each question.</h3>"
-        instructionsDiv.id = 'instructionsDiv'
+        instructionsDiv.id = `instructionsDiv_${idName}`
 
         const questionDiv = document.createElement('div')
         questionDiv.innerHTML = `<p>${problems[quizIndex]["question"]}</p>`
-        questionDiv.id = 'questionDiv'
+        questionDiv.id = `questionDiv_${idName}`
 
         const answeringForm = document.createElement('form')
-        answeringForm.id = "answeringForm"
+        answeringForm.id = `answeringForm_${idName}`
 
         if (type == "MC") {
             for (let choice of problems[quizIndex]["choices"]) {
@@ -585,27 +585,30 @@
         }
 
         const submitButton = document.createElement('button')
-        submitButton.id = "submitButton"
+        submitButton.id = `submitButton_${idName}`
         submitButton.innerHTML = "Submit"
         submitButton.type = "button"
-        if (type == "MC") submitButton.onclick = function () { checkAnswer(problems[quizIndex]["answer"]) }
-        else if (type == "MI") submitButton.onclick = function () { checkAnswerMI(problems[quizIndex]["FDSet"], table["attributes"]) }
+        submitButton.classList.add(`button_${idName}`)
+        if (type == "MC") submitButton.onclick = function () { checkAnswer(problems[quizIndex]["answer"], idName) }
+        else if (type == "MI") submitButton.onclick = function () { checkAnswerMI(problems[quizIndex]["FDSet"], table["attributes"], idName) }
 
         const prevButton = document.createElement('button')
-        prevButton.id = "prevButton"
+        prevButton.id = `prevButton_${idName}`
         prevButton.innerHTML = "Prev"
         prevButton.type = "button"
-        prevButton.onclick = function () { prevQuestion(problems, type, table["attributes"]) }
+        prevButton.classList.add(`button_${idName}`)
+        prevButton.onclick = function () { prevQuestion(problems, type, table["attributes"], idName) }
         prevButton.style.display = "none"
 
         const nextButton = document.createElement('button')
-        nextButton.id = "nextButton"
+        nextButton.id = `nextButton_${idName}`
         nextButton.innerHTML = "Next"
         nextButton.type = "button"
-        nextButton.onclick = function () { nextQuestion(problems, type, table["attributes"]) }
+        nextButton.classList.add(`button_${idName}`)
+        nextButton.onclick = function () { nextQuestion(problems, type, table["attributes"], idName) }
 
         const feedbackDiv = document.createElement('div')
-        feedbackDiv.id = 'feedbackDiv'
+        feedbackDiv.id = `feedbackDiv_${idName}`
 
         answeringForm.appendChild(submitButton)
         answeringForm.appendChild(prevButton)
@@ -615,61 +618,61 @@
         answerDiv.appendChild(answeringForm)
         answerDiv.appendChild(feedbackDiv)
 
-        const canvas = document.querySelector('#canvas')
+        const canvas = document.querySelector(`#canvas_${idName}`)
         canvas.appendChild(answerDiv)
 
     }
 
-    function nextQuestion(problems, type, attr) {
+    function nextQuestion(problems, type, attr, idName) {
         // display the prev button if you're pressing next on the very first question 
         if (quizIndex == 0) {
-            const prevButton = document.querySelector('#prevButton')
+            const prevButton = document.querySelector(`#prevButton_${idName}`)
             prevButton.style.display = "inline-block"
         }
 
         quizIndex++
-        changeQuestion(problems, type, attr)
+        changeQuestion(problems, type, attr, idName)
         // clear the feedback when switching questions 
-        const feedbackDiv = document.querySelector('#feedbackDiv')
+        const feedbackDiv = document.querySelector(`#feedbackDiv_${idName}`)
         feedbackDiv.className = ''
         feedbackDiv.innerHTML = ""
 
         // if got to very last question, don't display the next button
         if (quizIndex == problems.length - 1) {
-            const nextButton = document.querySelector('#nextButton')
+            const nextButton = document.querySelector(`#nextButton_${idName}`)
             nextButton.style.display = "none"
         }
     }
 
-    function prevQuestion(problems, type, attr) {
+    function prevQuestion(problems, type, attr, idName) {
         // display the prev button if you're pressing prev on the very last question 
         if (quizIndex == problems.length - 1) {
-            const nextButton = document.querySelector('#nextButton')
+            const nextButton = document.querySelector(`#nextButton_${idName}`)
             nextButton.style.display = "inline-block"
         }
 
         quizIndex--
-        changeQuestion(problems, type, attr)
+        changeQuestion(problems, type, attr, idName)
         // clear the feedback when switching questions 
-        const feedbackDiv = document.querySelector('#feedbackDiv')
+        const feedbackDiv = document.querySelector(`#feedbackDiv_${idName}`)
         feedbackDiv.className = ''
         feedbackDiv.innerHTML = ""
 
         // if got to very first question, don't display the prev button
         if (quizIndex == 0) {
-            const prevButton = document.querySelector('#prevButton')
+            const prevButton = document.querySelector(`#prevButton_${idName}`)
             prevButton.style.display = "none"
         }
     }
 
-    function changeQuestion(problems, type, attr) {
+    function changeQuestion(problems, type, attr, idName) {
 
-        const questionDiv = document.querySelector('#questionDiv')
+        const questionDiv = document.querySelector(`#questionDiv_${idName}`)
         questionDiv.innerHTML = `<p>${problems[quizIndex]["question"]}</p>`
 
         if (type == "MC") {
 
-            const answeringForm = document.querySelector('#answeringForm')
+            const answeringForm = document.querySelector(`#answeringForm_${idName}`)
 
             let count = 0
             for (let choice of problems[quizIndex]["choices"]) {
@@ -707,11 +710,11 @@
     }
 
     // check to see if the given answer is right or wrong for MC
-    function checkAnswer(answer) {
+    function checkAnswer(answer, idName) {
 
-        const answeringForm = document.querySelector('#answeringForm')
+        const answeringForm = document.querySelector(`#answeringForm_${idName}`)
         const data = Object.fromEntries(new FormData(answeringForm).entries())
-        const feedbackDiv = document.querySelector('#feedbackDiv')
+        const feedbackDiv = document.querySelector(`#feedbackDiv_${idName}`)
 
         // if no answer was given
         if (Object.keys(data).length == 0) {
@@ -735,7 +738,7 @@
     }
 
     // check to see if the given answer is right or wrong for MI
-    function checkAnswerMI(FDSet, attributes) {
+    function checkAnswerMI(FDSet, attributes, idName) {
 
         // will contain all the form values in an obj
         // the key is the attr + row number (A1, B2), the value will be the value from the table
@@ -743,7 +746,7 @@
         // will be false if any input is empty 
         let validAnswer = true
 
-        const feedbackDiv = document.querySelector('#feedbackDiv')
+        const feedbackDiv = document.querySelector(`#feedbackDiv_${idName}`)
 
         // populating formValues obj
         Array.from(Array(3)).forEach((x, i) => {
@@ -830,7 +833,7 @@
         const tableDiv = document.createElement('div')
         tableDiv.id = `tableDiv${type}_${idName}`
 
-        const canvas = document.querySelector('#canvas')
+        const canvas = document.querySelector(`#canvas_${idName}`)
         tableDiv.appendChild(table)
         canvas.appendChild(tableDiv)
 
@@ -883,7 +886,6 @@
             for (let [index, row] of data.entries()) {
 
                 const dataRow = document.createElement('tr')
-
                 for (let attribute of attributes) {
                     const dataCol = document.createElement('td')
                     dataCol.innerHTML = row[attribute]
@@ -897,7 +899,7 @@
 
         }
 
-        else if (type == "MI" && data) {
+        else if (type == "MI") {
 
             const form = document.createElement("form")
 
@@ -1138,15 +1140,15 @@
         },
 
         // the quiz where the user has to make an instance to violate for example a set of FDs
-        createMakeInstanceQuiz: function (problems, table) {
-            createAnswerDiv(problems, "MI", table)
-            createTable(table, "MI", "MI")
+        createMakeInstanceQuiz: function (problems, table, idName) {
+            createAnswerDiv(problems, "MI", table, idName)
+            createTable(table, "MI", idName)
         },
 
         // the quiz where the user has to make a choice for MC questions 
-        createMCQuiz: function (problems, table) {
-            createAnswerDiv(problems, "MC", table)
-            createTable(table, "MC", "MC")
+        createMCQuiz: function (problems, table, idName) {
+            createAnswerDiv(problems, "MC", table, idName)
+            createTable(table, "MC", idName)
         },
 
     }

@@ -9,12 +9,6 @@ body {
     margin-right: 5%;
 }
 
-#canvas {
-    position: relative;
-    margin-bottom: 5%;
-    margin-top: 5%;
-}
-
 #canvas2 {
     position: relative;
     margin-bottom: 5%;
@@ -56,7 +50,7 @@ body {
 }
 
 /* used for both the algorithm visualizer and the quiz maker */
-button {
+/* button {
     min-height: 5vh;
     min-width: 5vw;
     margin: 1%;
@@ -73,38 +67,7 @@ button {
 button:disabled {
     background-color: #c1c8e4;
     cursor: default;
-}
-
-/* contains the instructionsDiv, questionDiv, answeringForm, and feedbackDiv */
-#answerDiv {
-    width: 50%;
-    display: inline-block;
-    top: 50%;
-    -ms-transform: translateY(-50%);
-    transform: translateY(-50%);
-    position: absolute;
-}
-
-#tableDivMC_MC, #tableDivMI_MI {
-    width: 50%;
-    display: inline-block;
-    left: 50%;
-    position: relative;
-}
-
-#instructionsDiv, #answeringForm, #questionDiv {
-    padding-left: 15%;
-}
-
-/* used for any tables created for the quiz maker */
-#tableMC_MC, #tableMI_MI, #tableMC_Join1, #tableMC_Join2, #tableMC_Join3 {
-    width: 50%;
-    margin: 0 25% 0 25%;
-    border: 1px solid black;
-    border-collapse: collapse;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-    text-align: center;
-}
+} */
 
 #tableDivMC_Join1, #tableDivMC_Join2 {
     width: 50%;
@@ -116,57 +79,7 @@ button:disabled {
     margin-top: 5%;
 }
 
-thead tr {
-    background-color: #5680e9;
-    color: #ffffff;
-}
-
-th, td {
-    padding: 1% 2%;
-    max-width: 100px;
-}
-
-tbody tr:last-of-type {
-    border-bottom: 3px solid #5680e9;
-}
-
- tbody tr:nth-of-type(even) {
-    background-color: #c1c8e4;
-}
-
-/* used for feedback when the user submits their responses to the question */
-.feedback-incorrect {
-    background-color: rgb(255, 181, 181);
-    margin-left: 15%;
-    margin-top: 5%;
-    display: inline-block;
-    border-radius: 25px;
-    border: 2px solid rgb(233, 140, 140);
-    padding: 3%;
-}
-
-.feedback-correct {
-    background-color: rgb(190, 255, 181);
-    margin-left: 15%;
-    margin-top: 5%;
-    display: inline-block;
-    border-radius: 25px;
-    border: 2px solid rgb(171, 230, 163);
-    padding: 3%;
-}
-
 /* this is for the input field that will be for the MI type questions */
 .tableInput {
     max-width: 60%;
-}
-
-#feedbackDiv {
-    min-height: 10vh;
-}
-
-#code {
-    background-color: #f5f2f0;
-    border-radius: 25px;
-    background: #f5f2f0;
-    padding: 20px;
 }
