@@ -1,0 +1,72 @@
+#canvas_Closure, #canvas_NaturalJoin {
+    position: relative;
+    margin-bottom: 5%;
+    margin-top: 5%;
+}
+
+/* contains the inputs such as the attributeSet and the FDSet */
+#inputDiv_Closure, #inputDiv_NaturalJoin {
+    width: 50%;
+    float: left;
+}
+
+#inputDiv_NaturalJoin {
+    margin-right: 50%;
+}
+
+#buttonsDiv_Closure, #attributeSetDiv_Closure, #FDSetDiv_Closure, #buttonsDiv_NaturalJoin {
+    margin-left: 15%;
+}
+
+#buttonsDiv_NaturalJoin{
+    margin-bottom: 10%;
+}
+
+#attributeSetDiv_Closure {
+    margin-top: 5%;
+}
+
+/* contains the algorithm in text */
+#algorithmDiv_Closure {
+    width: 50%;
+    display: inline-block;
+}
+
+.algorithm {
+    padding-left: 25%
+}
+
+.hidden {
+    opacity: 0;
+}
+
+#codeDiv_Closure, #codeDiv_NaturalJoin {
+    background-color: #f5f2f0;
+    border-radius: 25px;
+    background: #f5f2f0;
+    padding: 20px;
+}
+
+#code_Closure, #code_NaturalJoin {
+    max-height: 50vh;
+    overflow: scroll;
+}
+
+#tableDivNJ1_NaturalJoin, #tableDivNJ2_NaturalJoin {
+    width: 50%;
+    display: inline-block;
+    position: relative;
+}
+
+#tableDivNJ3_NaturalJoin {
+    margin-top: 5%;
+}
+
+#tableNJ1_NaturalJoin, #tableNJ2_NaturalJoin, #tableNJ3_NaturalJoin {
+    width: 50%;
+    margin: 0 25% 0 25%;
+    border: 1px solid black;
+    border-collapse: collapse;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    text-align: center;
+}

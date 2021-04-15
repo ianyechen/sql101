@@ -9,48 +9,13 @@ body {
     margin-right: 5%;
 }
 
-#canvas2 {
-    position: relative;
-    margin-bottom: 5%;
-}
-
-/* contains the algorithm in text */
-#algorithmDiv {
-    width: 50%;
-    display: inline-block;
-    left: 50%;
-    position: relative;
-}
-
-/* contains the inputs such as the attributeSet and the FDSet */
-#inputDivClosure {
-    width: 50%;
-    display: inline-block;
-    top: 50%;
-    -ms-transform: translateY(-50%);
-    transform: translateY(-50%);
-    position: absolute;
-}
-
-#inputDivNaturalJoin {
-    width: 50%;
-    margin-bottom: 5%;
-}
-
-.algorithm {
-    padding-left: 25%
-}
-
-#buttonsDivClosure, #attributeSetDiv, #FDSetDiv {
-    margin-left: 15%;
-}
-
-.hidden {
-    opacity: 0;
+/* for titles of the examples (multiple choice, make instance) */
+h4 {
+    margin-top: 5%;
 }
 
 /* used for both the algorithm visualizer and the quiz maker */
-/* button {
+button {
     min-height: 5vh;
     min-width: 5vw;
     margin: 1%;
@@ -67,19 +32,22 @@ body {
 button:disabled {
     background-color: #c1c8e4;
     cursor: default;
-} */
-
-#tableDivMC_Join1, #tableDivMC_Join2 {
-    width: 50%;
-    display: inline-block;
-    position: relative;
 }
 
-#tableDivMC_Join3 {
-    margin-top: 5%;
+thead tr {
+    background-color: #5680e9;
+    color: #ffffff;
 }
 
-/* this is for the input field that will be for the MI type questions */
-.tableInput {
-    max-width: 60%;
+th, td {
+    padding: 1% 2%;
+    max-width: 80px;
+}
+
+tbody tr:last-of-type {
+    border-bottom: 3px solid #5680e9;
+}
+
+tbody tr:nth-of-type(even) {
+    background-color: #c1c8e4;
 }

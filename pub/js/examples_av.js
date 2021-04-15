@@ -2,15 +2,16 @@
 console.log("Loading example.js")
 
 const sql = new SQL101()
+const sql2 = new SQL101()
 
 function examples() {
 
     // const attributeSet = "AB"
     // const FDSet = ["AB->C", "BC->AD", "D->E", "CF->B"]
-    // const attributeSet = "C"
-    // const FDSet = ["AC->F", "CEF->B", "C->D", "DC->A"]
+    const attributeSet = "C"
+    const FDSet = ["AC->F", "CEF->B", "C->D", "DC->A"]
 
-    // sql.animationClosure(attributeSet, FDSet, 500)
+    sql.animationClosure(attributeSet, FDSet, 500, "Closure")
 
     const table1 = {
         "attributes": ["A", "B", "C"],
@@ -30,7 +31,7 @@ function examples() {
         ]
     }
 
-    sql.animationNaturalJoin(table1, table2, 500)
+    sql2.animationNaturalJoin(table1, table2, 500, "NaturalJoin")
 
 }
 

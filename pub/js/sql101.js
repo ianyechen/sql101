@@ -76,11 +76,11 @@
 
     }
 
-    function displayFDSet(FDSet) {
+    function displayFDSet(FDSet, idName) {
 
-        const inputDiv = document.querySelector('#inputDivClosure')
+        const inputDiv = document.querySelector(`#inputDiv_${idName}`)
         const FDSetDiv = document.createElement('div')
-        FDSetDiv.id = "FDSetDiv"
+        FDSetDiv.id = `FDSetDiv_${idName}`
 
         FDSet.forEach((FD, index) => {
             const FDList = document.createElement('li')
@@ -97,11 +97,11 @@
 
     }
 
-    function displayAttributeSet(attributeSet) {
+    function displayAttributeSet(attributeSet, idName) {
 
-        const inputDiv = document.querySelector('#inputDivClosure')
+        const inputDiv = document.querySelector(`#inputDiv_${idName}`)
         const attributeSetDiv = document.createElement('div')
-        attributeSetDiv.id = "attributeSetDiv"
+        attributeSetDiv.id = `attributeSetDiv_${idName}`
 
         attributeSetDiv.innerHTML = `<h3>We want to find the closure for ${attributeSet}.</h3><span>${attributeSet}<sup>+</sup> = </span>`
         inputDiv.appendChild(attributeSetDiv)
@@ -113,7 +113,7 @@
     //        attributeSet -> a string for which you want to find the closure for
     //        closureArr -> initially empty, used to store the closure for attributeSet
     // return: the closure for attributeSet
-    async function findClosure(attributeSet, FDSet, closureArr, speed) {
+    async function findClosure(attributeSet, FDSet, closureArr, speed, idName) {
 
         // indicates whether an FD has been successfully checked or not
         const doneArr = Array(FDSet.length).fill(false)
@@ -124,7 +124,7 @@
             closureArr.push(attr)
         })
 
-        const attributeSetDiv = document.querySelector('#attributeSetDiv')
+        const attributeSetDiv = document.querySelector(`#attributeSetDiv_${idName}`)
 
         closureArr.forEach((attr, index) => {
             // for updating the closure HTML
@@ -247,7 +247,7 @@
                             }
 
                             else {
-                                const attributeSetDiv = document.querySelector('#attributeSetDiv')
+                                const attributeSetDiv = document.querySelector(`#attributeSetDiv_${idName}`)
                                 const closureSpan = document.createElement('span')
 
                                 closureSpan.innerHTML = `${attr}`
@@ -394,10 +394,10 @@
 
     }
 
-    function displayAlgorithm(algorithm) {
+    function displayAlgorithm(algorithm, idName) {
 
         const algorithmDiv = document.createElement('div')
-        algorithmDiv.id = "algorithmDiv"
+        algorithmDiv.id = `algorithmDiv_${idName}`
         const algo = `
         <h3 class='algorithm'>attribute_closure(Y, S):</h3>
         <p class='algorithm'>&nbsp;&nbsp;&nbsp;&nbsp;initialize Y+ to Y</p>
@@ -407,13 +407,13 @@
         <p class='algorithm'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Add RHS to Y+</p>
         <p class='algorithm'>&nbsp;&nbsp;&nbsp;&nbsp;return Y+</p>
     `
-        const canvas = document.querySelector('#canvas')
+        const canvas = document.querySelector(`#canvas_${idName}`)
         algorithmDiv.innerHTML = algo
         canvas.appendChild(algorithmDiv)
 
     }
 
-    function displayInput(attributeSet, FDSet, type) {
+    function displayInput(attributeSet, FDSet, type, idName) {
 
         const inputDiv = document.createElement('div')
         const buttonsDiv = document.createElement('div')
@@ -424,16 +424,16 @@
         const nextStepButton = document.createElement('button')
         const prevButton = document.createElement('button')
 
-        const canvas = document.querySelector('#canvas')
+        const canvas = document.querySelector(`#canvas_${idName}`)
 
-        inputDiv.id = `inputDiv${type}`
-        buttonsDiv.id = `buttonsDiv${type}`
+        inputDiv.id = `inputDiv_${idName}`
+        buttonsDiv.id = `buttonsDiv_${idName}`
 
-        speedUpButton.id = "speedUpButton"
-        speedDownButton.id = "speedDownButton"
-        pauseButton.id = "pauseButton"
-        nextStepButton.id = "nextStepButton"
-        prevButton.id = "prevButton"
+        speedUpButton.id = `speedUpButton_${idName}`
+        speedDownButton.id = `speedDownButton_${idName}`
+        pauseButton.id = `pauseButton_${idName}`
+        nextStepButton.id = `nextStepButton_${idName}`
+        prevButton.id = `prevButton_${idName}`
 
         // speedUpButton.classList.add("speedButton")
         // speedDownButton.classList.add("speedButton")
@@ -449,8 +449,8 @@
 
         speedUpButton.onclick = function () { changeSpeed("faster") }
         speedDownButton.onclick = function () { changeSpeed("slower") }
-        pauseButton.onclick = function () { toggleAnimationPause() }
-        nextStepButton.onclick = function () { nextAnimation() }
+        pauseButton.onclick = function () { toggleAnimationPause(idName) }
+        nextStepButton.onclick = function () { nextAnimation(idName) }
         prevButton.onclick = function () { prevAnimation() }
 
         buttonsDiv.appendChild(speedUpButton)
@@ -462,8 +462,8 @@
         canvas.appendChild(inputDiv)
 
         if (type == "Closure") {
-            displayAttributeSet(attributeSet)
-            displayFDSet(FDSet)
+            displayAttributeSet(attributeSet, idName)
+            displayFDSet(FDSet, idName)
         }
 
     }
@@ -480,12 +480,12 @@
     }
 
     // toggles between the animation been played or paused 
-    function toggleAnimationPause() {
+    function toggleAnimationPause(idName) {
 
-        const nextStepButton = document.querySelector('#nextStepButton')
+        const nextStepButton = document.querySelector(`#nextStepButton_${idName}`)
         nextStepButton.disabled = true
 
-        const pausedButton = document.querySelector('#pauseButton')
+        const pausedButton = document.querySelector(`#pauseButton_${idName}`)
 
         if (animationPaused) {
             for (let animation of animatingArr) {
@@ -506,9 +506,9 @@
 
     }
 
-    function nextAnimation() {
+    function nextAnimation(idName) {
         if (animatingArr.length != 0) return // can't proceed until animations have finished
-        const pauseButton = document.querySelector('#pauseButton')
+        const pauseButton = document.querySelector(`#pauseButton_${idName}`)
         pauseButton.disabled = true
         // animatingArr.splice(0, animatingArr.length)
         // animationIndex++
@@ -847,7 +847,8 @@
         for (let attribute of attributes) {
             const headingCol = document.createElement('th')
             headingCol.innerHTML = attribute
-            headingCol.id = `tableHeader${attribute}_${idName}`
+            if (type.includes("NJ")) headingCol.id = `tableHeader${attribute}_${type}`
+            else headingCol.id = `tableHeader${attribute}_${idName}`
             headingRow.appendChild(headingCol)
         }
 
@@ -879,9 +880,10 @@
     function makeData(attributes, data, type, idName) {
 
         const tbody = document.createElement('tbody')
-        tbody.id = `tbody_${idName}`
+        if (type.includes("NJ")) tbody.id = `tbody_${type}`
+        else tbody.id = `tbody_${idName}`
 
-        if (type == "MC" && data) {
+        if ((type == "MC" || type.includes("NJ")) && data) {
 
             for (let [index, row] of data.entries()) {
 
@@ -889,7 +891,8 @@
                 for (let attribute of attributes) {
                     const dataCol = document.createElement('td')
                     dataCol.innerHTML = row[attribute]
-                    dataCol.id = `tableRow${attribute + index}_${idName}`
+                    if (type.includes("NJ")) dataCol.id = `tableRow${attribute + index}_${type}`
+                    else dataCol.id = `tableRow${attribute + index}_${idName}`
                     dataRow.appendChild(dataCol)
                 }
 
@@ -930,7 +933,7 @@
     }
 
     // calculates the resulting table after a natural join of two tables 
-    function natrualJoinTables(table1, table2, answerTable) {
+    function natrualJoinTables(table1, table2, answerTable, idName) {
 
         const attr1 = table1["attributes"]
         const attr2 = table2["attributes"]
@@ -943,8 +946,8 @@
         attrAfterJoin = Array.from(attrAfterJoin)
 
         answerTable["attributes"] = attrAfterJoin
-        createTable(answerTable, "MC", "Join3")
-        const tbody = document.querySelector(`#tbody_Join3`)
+        createTable(answerTable, "NJ3", idName)
+        const tbody = document.querySelector(`#tbody_NJ3`)
 
         let commonAttr = []
         commonAttr = attr1.filter(attr => attr2.includes(attr))
@@ -973,7 +976,7 @@
 
                         let animationObj = undefined
 
-                        const table1Attr = document.querySelector(`#tableHeader${attr}_Join1`)
+                        const table1Attr = document.querySelector(`#tableHeader${attr}_NJ1`)
                         animationObj = {
                             "element": table1Attr,
                             "animation_name": `fadeInHeader speedms linear forwards`,
@@ -981,7 +984,7 @@
                         }
                         arrayToPush.push(animationObj)
 
-                        const table1Value = document.querySelector(`#tableRow${attr + index1}_Join1`)
+                        const table1Value = document.querySelector(`#tableRow${attr + index1}_NJ1`)
                         animationObj = {
                             "element": table1Value,
                             "animation_name": `fadeIn speedms linear forwards`,
@@ -989,7 +992,7 @@
                         }
                         arrayToPush.push(animationObj)
 
-                        const table2Attr = document.querySelector(`#tableHeader${attr}_Join2`)
+                        const table2Attr = document.querySelector(`#tableHeader${attr}_NJ2`)
                         animationObj = {
                             "element": table2Attr,
                             "animation_name": `fadeInHeader speedms linear forwards`,
@@ -997,7 +1000,7 @@
                         }
                         arrayToPush.push(animationObj)
 
-                        const table2Value = document.querySelector(`#tableRow${attr + index2}_Join2`)
+                        const table2Value = document.querySelector(`#tableRow${attr + index2}_NJ2`)
                         animationObj = {
                             "element": table2Value,
                             "animation_name": `fadeIn speedms linear forwards`,
@@ -1014,7 +1017,7 @@
                     attr1.forEach(attr => {
                         newRow[attr] = value1[attr]
                         // animations, highlights the row when joining 
-                        const table1Value = document.querySelector(`#tableRow${attr + index1}_Join1`)
+                        const table1Value = document.querySelector(`#tableRow${attr + index1}_NJ1`)
                         animationObj = {
                             "element": table1Value,
                             "animation_name": `fadeIn speedms linear forwards`,
@@ -1027,7 +1030,7 @@
                         // add to newRow if it's not already in it, or if there wasn't any common attr (in this case, it's just cross join)
                         if (!(attr in newRow) || commonAttr.length == 0) newRow[attr] = value2[attr]
                         // animations, highlights the row when joining 
-                        const table2Value = document.querySelector(`#tableRow${attr + index2}_Join2`)
+                        const table2Value = document.querySelector(`#tableRow${attr + index2}_NJ2`)
                         animationObj = {
                             "element": table2Value,
                             "animation_name": `fadeIn speedms linear forwards`,
@@ -1037,10 +1040,10 @@
                     })
 
                     dataAfterJoin.push(newRow)
-                    addRowToTable(tbody, newRow, attrAfterJoin, "Join3", indexNew)
+                    addRowToTable(tbody, newRow, attrAfterJoin, "NJ3", indexNew)
 
                     for (const [key, value] of Object.entries(newRow)) {
-                        const table3Value = document.querySelector(`#tableRow${key + indexNew}_Join3`)
+                        const table3Value = document.querySelector(`#tableRow${key + indexNew}_NJ3`)
                         animationObj = {
                             "element": table3Value,
                             "animation_name": `fadeIn speedms linear forwards`,
@@ -1060,7 +1063,7 @@
 
                         let animationObj = undefined
 
-                        const table1Attr = document.querySelector(`#tableHeader${attr}_Join1`)
+                        const table1Attr = document.querySelector(`#tableHeader${attr}_NJ1`)
                         animationObj = {
                             "element": table1Attr,
                             "animation_name": `fadeInErrHeader speedms linear forwards`,
@@ -1068,7 +1071,7 @@
                         }
                         arrayToPush.push(animationObj)
 
-                        const table1Value = document.querySelector(`#tableRow${attr + index1}_Join1`)
+                        const table1Value = document.querySelector(`#tableRow${attr + index1}_NJ1`)
                         animationObj = {
                             "element": table1Value,
                             "animation_name": `fadeInErr speedms linear forwards`,
@@ -1076,7 +1079,7 @@
                         }
                         arrayToPush.push(animationObj)
 
-                        const table2Attr = document.querySelector(`#tableHeader${attr}_Join2`)
+                        const table2Attr = document.querySelector(`#tableHeader${attr}_NJ2`)
                         animationObj = {
                             "element": table2Attr,
                             "animation_name": `fadeInErrHeader speedms linear forwards`,
@@ -1084,7 +1087,7 @@
                         }
                         arrayToPush.push(animationObj)
 
-                        const table2Value = document.querySelector(`#tableRow${attr + index2}_Join2`)
+                        const table2Value = document.querySelector(`#tableRow${attr + index2}_NJ2`)
                         animationObj = {
                             "element": table2Value,
                             "animation_name": `fadeInErr speedms linear forwards`,
@@ -1111,31 +1114,31 @@
     SQL101.prototype = {
 
         // the main functions that will be used for animations
-        animationClosure: function (attributeSet, FDSet, speed) {
+        animationClosure: function (attributeSet, FDSet, speed, idName) {
 
             animationSpeed = speed
 
             let closureArr = [] // the array that will store the closures 
             splitFD(FDSet) // splits the RHS of FDs if necessary 
 
-            displayInput(attributeSet, FDSet, "Closure")
-            displayAlgorithm("Closure")
+            displayInput(attributeSet, FDSet, "Closure", idName)
+            displayAlgorithm("Closure", idName)
 
             // first compute the algorithm and store all information before showing animation
-            findClosure(attributeSet, FDSet, closureArr, speed)
+            findClosure(attributeSet, FDSet, closureArr, speed, idName)
 
         },
 
-        animationNaturalJoin: function (table1, table2, speed) {
+        animationNaturalJoin: function (table1, table2, speed, idName) {
 
             animationSpeed = speed
 
             let answerTable = {}
 
-            displayInput([], [], "NaturalJoin")
-            createTable(table1, "MC", "Join1")
-            createTable(table2, "MC", "Join2")
-            natrualJoinTables(table1, table2, answerTable)
+            displayInput([], [], "NaturalJoin", idName)
+            createTable(table1, "NJ1", idName)
+            createTable(table2, "NJ2", idName)
+            natrualJoinTables(table1, table2, answerTable, idName)
 
         },
 
