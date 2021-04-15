@@ -448,6 +448,9 @@
             nextStepButton.innerHTML = "Next Step"
             prevButton.innerHTML = "Prev"
 
+            // hiding the play all button 
+            pauseButton.style.display = "none"
+
             speedUpButton.onclick = () => { this.changeSpeed("faster") }
             speedDownButton.onclick = () => { this.changeSpeed("slower") }
             pauseButton.onclick = () => { this.toggleAnimationPause(idName) }
@@ -456,7 +459,7 @@
 
             buttonsDiv.appendChild(speedUpButton)
             buttonsDiv.appendChild(speedDownButton)
-            // buttonsDiv.appendChild(pauseButton)
+            buttonsDiv.appendChild(pauseButton)
             buttonsDiv.appendChild(nextStepButton)
             // buttonsDiv.appendChild(prevButton)
             inputDiv.appendChild(buttonsDiv)
