@@ -548,7 +548,7 @@
     }
 
     // creates the answering part of the quiz maker 
-    function createAnswerDiv(problems, type, table, idName) {
+    function createAnswerDiv(problems, type, table, idName, setUp) {
 
         const answerDiv = document.createElement('div')
         answerDiv.id = `answerDiv_${idName}`
@@ -558,14 +558,14 @@
         instructionsDiv.id = `instructionsDiv_${idName}`
 
         const questionDiv = document.createElement('div')
-        questionDiv.innerHTML = `<p>${problems[quizIndex]["question"]}</p>`
+        questionDiv.innerHTML = `<p>${problems[setUp.quizIndex]["question"]}</p>`
         questionDiv.id = `questionDiv_${idName}`
 
         const answeringForm = document.createElement('form')
         answeringForm.id = `answeringForm_${idName}`
 
         if (type == "MC") {
-            for (let choice of problems[quizIndex]["choices"]) {
+            for (let choice of problems[setUp.quizIndex]["choices"]) {
 
                 const inputElement = document.createElement('input')
                 inputElement.type = "radio"
@@ -589,15 +589,15 @@
         submitButton.innerHTML = "Submit"
         submitButton.type = "button"
         submitButton.classList.add(`button_${idName}`)
-        if (type == "MC") submitButton.onclick = function () { checkAnswer(problems[quizIndex]["answer"], idName) }
-        else if (type == "MI") submitButton.onclick = function () { checkAnswerMI(problems[quizIndex]["FDSet"], table["attributes"], idName) }
+        if (type == "MC") submitButton.onclick = function () { checkAnswer(problems[setUp.quizIndex]["answer"], idName) }
+        else if (type == "MI") submitButton.onclick = function () { checkAnswerMI(problems[setUp.quizIndex]["FDSet"], table["attributes"], idName) }
 
         const prevButton = document.createElement('button')
         prevButton.id = `prevButton_${idName}`
         prevButton.innerHTML = "Prev"
         prevButton.type = "button"
         prevButton.classList.add(`button_${idName}`)
-        prevButton.onclick = function () { prevQuestion(problems, type, table["attributes"], idName) }
+        prevButton.onclick = function () { prevQuestion(problems, type, table["attributes"], idName, setUp) }
         prevButton.style.display = "none"
 
         const nextButton = document.createElement('button')
@@ -605,7 +605,7 @@
         nextButton.innerHTML = "Next"
         nextButton.type = "button"
         nextButton.classList.add(`button_${idName}`)
-        nextButton.onclick = function () { nextQuestion(problems, type, table["attributes"], idName) }
+        nextButton.onclick = function () { nextQuestion(problems, type, table["attributes"], idName, setUp) }
 
         const feedbackDiv = document.createElement('div')
         feedbackDiv.id = `feedbackDiv_${idName}`
@@ -623,59 +623,59 @@
 
     }
 
-    function nextQuestion(problems, type, attr, idName) {
+    function nextQuestion(problems, type, attr, idName, setUp) {
         // display the prev button if you're pressing next on the very first question 
-        if (quizIndex == 0) {
+        if (setUp.quizIndex == 0) {
             const prevButton = document.querySelector(`#prevButton_${idName}`)
             prevButton.style.display = "inline-block"
         }
 
-        quizIndex++
-        changeQuestion(problems, type, attr, idName)
+        setUp.quizIndex++
+        changeQuestion(problems, type, attr, idName, setUp)
         // clear the feedback when switching questions 
         const feedbackDiv = document.querySelector(`#feedbackDiv_${idName}`)
         feedbackDiv.className = ''
         feedbackDiv.innerHTML = ""
 
         // if got to very last question, don't display the next button
-        if (quizIndex == problems.length - 1) {
+        if (setUp.quizIndex == problems.length - 1) {
             const nextButton = document.querySelector(`#nextButton_${idName}`)
             nextButton.style.display = "none"
         }
     }
 
-    function prevQuestion(problems, type, attr, idName) {
+    function prevQuestion(problems, type, attr, idName, setUp) {
         // display the prev button if you're pressing prev on the very last question 
-        if (quizIndex == problems.length - 1) {
+        if (setUp.quizIndex == problems.length - 1) {
             const nextButton = document.querySelector(`#nextButton_${idName}`)
             nextButton.style.display = "inline-block"
         }
 
-        quizIndex--
-        changeQuestion(problems, type, attr, idName)
+        setUp.quizIndex--
+        changeQuestion(problems, type, attr, idName, setUp)
         // clear the feedback when switching questions 
         const feedbackDiv = document.querySelector(`#feedbackDiv_${idName}`)
         feedbackDiv.className = ''
         feedbackDiv.innerHTML = ""
 
         // if got to very first question, don't display the prev button
-        if (quizIndex == 0) {
+        if (setUp.quizIndex == 0) {
             const prevButton = document.querySelector(`#prevButton_${idName}`)
             prevButton.style.display = "none"
         }
     }
 
-    function changeQuestion(problems, type, attr, idName) {
+    function changeQuestion(problems, type, attr, idName, setUp) {
 
         const questionDiv = document.querySelector(`#questionDiv_${idName}`)
-        questionDiv.innerHTML = `<p>${problems[quizIndex]["question"]}</p>`
+        questionDiv.innerHTML = `<p>${problems[setUp.quizIndex]["question"]}</p>`
 
         if (type == "MC") {
 
             const answeringForm = document.querySelector(`#answeringForm_${idName}`)
 
             let count = 0
-            for (let choice of problems[quizIndex]["choices"]) {
+            for (let choice of problems[setUp.quizIndex]["choices"]) {
 
                 const inputElement = document.createElement('input')
                 inputElement.type = "radio"
@@ -1144,13 +1144,19 @@
 
         // the quiz where the user has to make an instance to violate for example a set of FDs
         createMakeInstanceQuiz: function (problems, table, idName) {
-            createAnswerDiv(problems, "MI", table, idName)
+            const setUp = new Object({
+                quizIndex: 0
+            })
+            createAnswerDiv(problems, "MI", table, idName, setUp)
             createTable(table, "MI", idName)
         },
 
         // the quiz where the user has to make a choice for MC questions 
         createMCQuiz: function (problems, table, idName) {
-            createAnswerDiv(problems, "MC", table, idName)
+            const setUp = new Object({
+                quizIndex: 0
+            })
+            createAnswerDiv(problems, "MC", table, idName, setUp)
             createTable(table, "MC", idName)
         },
 
