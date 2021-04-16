@@ -31,6 +31,10 @@
         this.quizIndex = 0
         // used for the quiz maker with options "marks", used to keep track of how many correct the user has scored 
         this.totalCorrect = 0
+        // used for the quiz maker with options "time", used to keep track of when the user started the quiz
+        this.startTime = undefined
+        // used for the quiz maker with options "time", used to keep track of the interval function that is needed to pass into clearInterval
+        this.intervalFunc = undefined
 
     }
 
@@ -585,9 +589,18 @@
                     labelElement.setAttribute("for", choice + idName)
                     labelElement.innerHTML = `${choice}`
 
+                    const breakLine = document.createElement("br")
+
+                    // don't display the choices if "time", need to first press the start button 
+                    if (options.includes("time")) {
+                        inputElement.style.display = "none"
+                        labelElement.style.display = "none"
+                        breakLine.style.display = "none"
+                    }
+
                     answeringForm.appendChild(inputElement)
                     answeringForm.appendChild(labelElement)
-                    answeringForm.appendChild(document.createElement("br"))
+                    answeringForm.appendChild(breakLine)
 
                 }
             }
@@ -614,7 +627,19 @@
             nextButton.type = "button"
             nextButton.classList.add(`button_${idName}`)
             nextButton.onclick = () => { this.nextQuestion(problems, type, table["attributes"], idName, options) }
-            if (options.includes("marks")) nextButton.style.display = "none" // display only the submit button for each question for quiz with "marks"
+            if (options.includes("marks") || options.includes("time")) nextButton.style.display = "none" // display only the submit button for each question for quiz with "marks"
+
+            const startButton = document.createElement('button')
+            startButton.id = `startButton_${idName}`
+            startButton.innerHTML = "Start"
+            startButton.type = "button"
+            startButton.classList.add(`button_${idName}`)
+            startButton.onclick = () => { this.startQuiz(problems, type, table["attributes"], idName, options) }
+
+            const timeElapsed = document.createElement('p')
+            timeElapsed.id = `timeElapsed_${idName}`
+            timeElapsed.innerHTML = "00:00:00"
+            timeElapsed.style.display = "none"
 
             const feedbackDiv = document.createElement('div')
             feedbackDiv.id = `feedbackDiv_${idName}`
@@ -622,6 +647,8 @@
             answeringForm.appendChild(submitButton)
             answeringForm.appendChild(prevButton)
             answeringForm.appendChild(nextButton)
+            answeringForm.appendChild(startButton)
+            answeringForm.appendChild(timeElapsed)
             answerDiv.appendChild(instructionsDiv)
             answerDiv.appendChild(questionDiv)
             answerDiv.appendChild(answeringForm)
@@ -629,6 +656,75 @@
 
             const canvas = document.querySelector(`#canvas_${idName}`)
             canvas.appendChild(answerDiv)
+
+            if (options.includes("time")) {
+                questionDiv.style.display = "none"
+                submitButton.style.display = "none"
+            }
+
+            else if (!options.includes("time")) startButton.style.display = "none"
+
+        },
+
+        // onClick function for the "Start" button, used for "time" options
+        startQuiz: function (problems, type, attr, idName, options) {
+
+            if (!options.includes("marks")) {
+                const nextButton = document.querySelector(`#nextButton_${idName}`)
+                nextButton.style.display = "inline-block"
+            }
+
+            const questionDiv = document.querySelector(`#questionDiv_${idName}`)
+            questionDiv.style.display = "block"
+
+            const answeringForm = document.querySelector(`#answeringForm_${idName}`)
+
+            // displaying the choices for the answers
+            for (let child of answeringForm.children) {
+                if (child.tagName == "BR") child.style.display = "block"
+                else if (child.tagName == "INPUT" || child.tagName == "LABEL") child.style.display = "inline-block"
+            }
+
+            const submitButton = document.querySelector(`#submitButton_${idName}`)
+            const startButton = document.querySelector(`#startButton_${idName}`)
+            submitButton.style.display = "inline-block"
+            startButton.style.display = "none"
+
+            const timeElapsed = document.querySelector(`#timeElapsed_${idName}`)
+            timeElapsed.style.display = "inline-block"
+
+            this.startTimer(idName)
+
+        },
+
+        startTimer: function (idName) {
+            this.startTime = Date.now()
+            this.intervalFunc = setInterval(() => { this.updateTime(idName) }, 10)
+        },
+
+        updateTime: function (idName) {
+
+            const elapsedTime = Date.now() - this.startTime
+            const timeElapsed = document.querySelector(`#timeElapsed_${idName}`)
+
+            // below time to string conversion obtained from https://tinloof.com/blog/how-to-build-a-stopwatch-with-html-css-js-react-part-2/
+            let diffInHrs = elapsedTime / 3600000;
+            let hh = Math.floor(diffInHrs);
+
+            let diffInMin = (diffInHrs - hh) * 60;
+            let mm = Math.floor(diffInMin);
+
+            let diffInSec = (diffInMin - mm) * 60;
+            let ss = Math.floor(diffInSec);
+
+            let diffInMs = (diffInSec - ss) * 100;
+            let ms = Math.floor(diffInMs);
+
+            let formattedMM = mm.toString().padStart(2, "0");
+            let formattedSS = ss.toString().padStart(2, "0");
+            let formattedMS = ms.toString().padStart(2, "0");
+
+            timeElapsed.innerHTML = `${formattedMM}:${formattedSS}:${formattedMS}`;
 
         },
 
@@ -646,6 +742,7 @@
             // if at the final question and you've submitted and you're pressing next, show the results of the quiz 
             if (options.includes("marks") && this.quizIndex == problems.length) {
                 this.showMarks(problems.length, idName)
+                if (options.includes("time")) clearInterval(this.intervalFunc)
                 return
             }
 
@@ -655,6 +752,11 @@
                 this.totalCorrect = 0
                 const nextButton = document.querySelector(`#nextButton_${idName}`)
                 nextButton.innerHTML = "Next"
+                if (options.includes("time")) {
+                    const timeElapsed = document.querySelector(`#timeElapsed_${idName}`)
+                    timeElapsed.innerHTML = "00:00:00"
+                    this.startTimer(idName)
+                }
             }
 
             // if got to very last question, don't display the next button
