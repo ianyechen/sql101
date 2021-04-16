@@ -1,7 +1,8 @@
 /* https://visme.co/blog/website-color-schemes/ <- color pallets */
 
 body {
-    font-family: 'Alegreya Sans', sans-serif;
+    font-family: 'Nunito', sans-serif;
+    background-color: #afcaf5;
 }
 
 #body {
@@ -9,9 +10,25 @@ body {
     margin-right: 5%;
 }
 
-/* for titles of the examples (multiple choice, make instance) */
-h4 {
-    margin-top: 5%;
+.codeDiv {
+    background-color: rgb(230, 230, 230);
+    border-radius: 45px;
+    background: rgb(230, 230, 230);
+    padding: 40px;
+    border: 1px solid black;
+    margin-bottom: 5%;
+}
+
+.canvas {
+    background-color: white;
+    border-radius: 45px;
+    background: white;
+    padding: 40px;
+    border: 1px solid black;
+}
+
+.marginBottom {
+    margin-bottom: 5%;
 }
 
 /* used for both the algorithm visualizer and the quiz maker */

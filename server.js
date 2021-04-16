@@ -32,6 +32,14 @@ app.get('/home.html', (req, res) => {
     res.sendFile(path.join(__dirname+'/pub/html/home.html'))
 })
 
+app.get('/api.html', (req, res) => {
+    res.sendFile(path.join(__dirname+'/pub/html/api.html'))
+})
+
+app.get('/getting-started.html', (req, res) => {
+    res.sendFile(path.join(__dirname+'/pub/html/getting-started.html'))
+})
+
 app.get('/examples_qm.html', (req, res) => {
     res.sendFile(path.join(__dirname+'/pub/html/examples_qm.html'))
 })
