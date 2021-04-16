@@ -1024,7 +1024,7 @@
             for (let attribute of attributes) {
                 const headingCol = document.createElement('th')
                 headingCol.innerHTML = attribute
-                if (type.includes("NJ")) headingCol.id = `tableHeader${attribute}_${type}`
+                if (type.includes("NJ") || type.includes("CJ")) headingCol.id = `tableHeader${attribute}_${type}`
                 else headingCol.id = `tableHeader${attribute}_${idName}`
                 headingRow.appendChild(headingCol)
             }
@@ -1044,7 +1044,7 @@
             for (let attribute of attributes) {
                 const dataCol = document.createElement('td')
                 dataCol.innerHTML = row[attribute]
-                dataCol.id = `tableRow${attribute + index}_${idName}`
+                dataCol.id = `tableRow${attribute.replace(".", "") + index}_${idName}` // discard the . in the id because querySelector won't work with a period 
                 dataCol.style.opacity = 0 // hides the table cells initially 
                 dataRow.appendChild(dataCol)
             }
@@ -1057,10 +1057,10 @@
         makeData: function (attributes, data, type, idName) {
 
             const tbody = document.createElement('tbody')
-            if (type.includes("NJ")) tbody.id = `tbody_${type}`
+            if (type.includes("NJ") || type.includes("CJ")) tbody.id = `tbody_${type}`
             else tbody.id = `tbody_${idName}`
 
-            if ((type == "MC" || type.includes("NJ")) && data) {
+            if ((type == "MC" || (type.includes("NJ")) && data) || (type.includes("CJ")) && data) {
 
                 for (let [index, row] of data.entries()) {
 
@@ -1068,7 +1068,7 @@
                     for (let attribute of attributes) {
                         const dataCol = document.createElement('td')
                         dataCol.innerHTML = row[attribute]
-                        if (type.includes("NJ")) dataCol.id = `tableRow${attribute + index}_${type}`
+                        if (type.includes("NJ") || type.includes("CJ")) dataCol.id = `tableRow${attribute.replace(".", "") + index}_${type}`
                         else dataCol.id = `tableRow${attribute + index}_${idName}`
                         dataRow.appendChild(dataCol)
                     }
@@ -1110,24 +1110,69 @@
         },
 
         // calculates the resulting table after a natural join of two tables 
-        natrualJoinTables: function (table1, table2, answerTable, idName) {
+        joinTables: function (table1, table2, answerTable, type, idName) {
 
             const attr1 = table1["attributes"]
             const attr2 = table2["attributes"]
             const data1 = table1["data"]
             const data2 = table2["data"]
 
-            let attrAfterJoin = new Set()
-            for (let attr of attr1) attrAfterJoin.add(attr)
-            for (let attr of attr2) attrAfterJoin.add(attr)
-            attrAfterJoin = Array.from(attrAfterJoin)
+            let attrAfterJoin
+            // for natural joins, we join based on common attributes, so we use a set
+            if (type == "NJ") {
+                attrAfterJoin = new Set()
+                for (let attr of attr1) attrAfterJoin.add(attr)
+                for (let attr of attr2) attrAfterJoin.add(attr)
+                attrAfterJoin = Array.from(attrAfterJoin)
+            }
+
+            // for cross joins, if there is a common attr, need to add Table1. and Table2. in front of the attr 
+            else if (type == "CJ") {
+
+                attrAfterJoin = []
+                for (let attr of attr1) attrAfterJoin.push(attr)
+
+                for (let attr of attr2) {
+
+                    if (attrAfterJoin.includes(attr)) {
+
+                        // adding Table1. and Table2. in front for attrAfterJoin
+                        const index = attrAfterJoin.indexOf(attr)
+                        attrAfterJoin[index] = "Table1." + attrAfterJoin[index]
+                        attrAfterJoin.push("Table2." + attr)
+
+                        // adding prefixes for the attributes of the "table" parameter
+                        const index1 = attr1.indexOf(attr)
+                        attr1[index1] = "Table1." + attr1[index1]
+                        const index2 = attr2.indexOf(attr)
+                        attr2[index2] = "Table2." + attr2[index2]
+
+                        // adding prefixes for the attributes of the "data" parameter
+                        for (let dataRow of data1) {
+                            dataRow["Table1." + attr] = dataRow[attr]
+                            delete dataRow[attr]
+                        }
+
+                        for (let dataRow of data2) {
+                            dataRow["Table2." + attr] = dataRow[attr]
+                            delete dataRow[attr]
+                        }
+                        
+                    }
+
+                    else attrAfterJoin.push(attr)
+
+                }
+
+            }
 
             answerTable["attributes"] = attrAfterJoin
-            this.createTable(answerTable, "NJ3", idName)
-            const tbody = document.querySelector(`#tbody_NJ3`)
+            this.createTable(answerTable, `${type}3`, idName)
+            const tbody = document.querySelector(`#tbody_${type}3`)
 
             let commonAttr = []
-            commonAttr = attr1.filter(attr => attr2.includes(attr))
+            // there shouldn't be any common attributes for cross joins 
+            if (type == "NJ") commonAttr = attr1.filter(attr => attr2.includes(attr))
 
             let dataAfterJoin = []
             let indexNew = 0 // number of rows for the joined table (Join3), starts at 0 
@@ -1153,7 +1198,7 @@
 
                             let animationObj = undefined
 
-                            const table1Attr = document.querySelector(`#tableHeader${attr}_NJ1`)
+                            const table1Attr = document.querySelector(`#tableHeader${attr}_${type}1`)
                             animationObj = {
                                 "element": table1Attr,
                                 "animation_name": `fadeInHeader speedms linear forwards`,
@@ -1161,7 +1206,7 @@
                             }
                             this.arrayToPush.push(animationObj)
 
-                            const table1Value = document.querySelector(`#tableRow${attr + index1}_NJ1`)
+                            const table1Value = document.querySelector(`#tableRow${attr + index1}_${type}1`)
                             animationObj = {
                                 "element": table1Value,
                                 "animation_name": `fadeIn speedms linear forwards`,
@@ -1169,7 +1214,7 @@
                             }
                             this.arrayToPush.push(animationObj)
 
-                            const table2Attr = document.querySelector(`#tableHeader${attr}_NJ2`)
+                            const table2Attr = document.querySelector(`#tableHeader${attr}_${type}2`)
                             animationObj = {
                                 "element": table2Attr,
                                 "animation_name": `fadeInHeader speedms linear forwards`,
@@ -1177,7 +1222,7 @@
                             }
                             this.arrayToPush.push(animationObj)
 
-                            const table2Value = document.querySelector(`#tableRow${attr + index2}_NJ2`)
+                            const table2Value = document.querySelector(`#tableRow${attr + index2}_${type}2`)
                             animationObj = {
                                 "element": table2Value,
                                 "animation_name": `fadeIn speedms linear forwards`,
@@ -1187,14 +1232,17 @@
 
                         })
 
-                        this.pushAnimationToArr()
+                        // only push if you need to animate the headers of the tables 
+                        if (attrStr1 != "") this.pushAnimationToArr() 
 
                         let newRow = new Object()
 
                         attr1.forEach(attr => {
                             newRow[attr] = value1[attr]
+                            attr = attr.slice(-1) // in original tables, the id's of the elements are still just the attribute, no Table1. and Table2. 
+
                             // animations, highlights the row when joining 
-                            const table1Value = document.querySelector(`#tableRow${attr + index1}_NJ1`)
+                            const table1Value = document.querySelector(`#tableRow${attr.replace(".", "") + index1}_${type}1`)
                             animationObj = {
                                 "element": table1Value,
                                 "animation_name": `fadeIn speedms linear forwards`,
@@ -1206,8 +1254,10 @@
                         attr2.forEach(attr => {
                             // add to newRow if it's not already in it, or if there wasn't any common attr (in this case, it's just cross join)
                             if (!(attr in newRow) || commonAttr.length == 0) newRow[attr] = value2[attr]
+                            attr = attr.slice(-1) // in original tables, the id's of the elements are still just the attribute, no Table1. and Table2. 
+
                             // animations, highlights the row when joining 
-                            const table2Value = document.querySelector(`#tableRow${attr + index2}_NJ2`)
+                            const table2Value = document.querySelector(`#tableRow${attr.replace(".", "") + index2}_${type}2`)
                             animationObj = {
                                 "element": table2Value,
                                 "animation_name": `fadeIn speedms linear forwards`,
@@ -1217,10 +1267,10 @@
                         })
 
                         dataAfterJoin.push(newRow)
-                        this.addRowToTable(tbody, newRow, attrAfterJoin, "NJ3", indexNew)
+                        this.addRowToTable(tbody, newRow, attrAfterJoin, `${type}3`, indexNew)
 
-                        for (const [key, value] of Object.entries(newRow)) {
-                            const table3Value = document.querySelector(`#tableRow${key + indexNew}_NJ3`)
+                        for (let [key, value] of Object.entries(newRow)) {
+                            const table3Value = document.querySelector(`#tableRow${key.replace(".", "") + indexNew}_${type}3`)
                             animationObj = {
                                 "element": table3Value,
                                 "animation_name": `fadeIn speedms linear forwards`,
@@ -1240,7 +1290,7 @@
 
                             let animationObj = undefined
 
-                            const table1Attr = document.querySelector(`#tableHeader${attr}_NJ1`)
+                            const table1Attr = document.querySelector(`#tableHeader${attr}_${type}1`)
                             animationObj = {
                                 "element": table1Attr,
                                 "animation_name": `fadeInErrHeader speedms linear forwards`,
@@ -1248,7 +1298,7 @@
                             }
                             this.arrayToPush.push(animationObj)
 
-                            const table1Value = document.querySelector(`#tableRow${attr + index1}_NJ1`)
+                            const table1Value = document.querySelector(`#tableRow${attr + index1}_${type}1`)
                             animationObj = {
                                 "element": table1Value,
                                 "animation_name": `fadeInErr speedms linear forwards`,
@@ -1256,7 +1306,7 @@
                             }
                             this.arrayToPush.push(animationObj)
 
-                            const table2Attr = document.querySelector(`#tableHeader${attr}_NJ2`)
+                            const table2Attr = document.querySelector(`#tableHeader${attr}_${type}2`)
                             animationObj = {
                                 "element": table2Attr,
                                 "animation_name": `fadeInErrHeader speedms linear forwards`,
@@ -1264,7 +1314,7 @@
                             }
                             this.arrayToPush.push(animationObj)
 
-                            const table2Value = document.querySelector(`#tableRow${attr + index2}_NJ2`)
+                            const table2Value = document.querySelector(`#tableRow${attr + index2}_${type}2`)
                             animationObj = {
                                 "element": table2Value,
                                 "animation_name": `fadeInErr speedms linear forwards`,
@@ -1311,7 +1361,20 @@
             this.displayInput([], [], "NaturalJoin", idName)
             this.createTable(table1, "NJ1", idName)
             this.createTable(table2, "NJ2", idName)
-            this.natrualJoinTables(table1, table2, answerTable, idName)
+            this.joinTables(table1, table2, answerTable, "NJ", idName)
+
+        },
+
+        animationCrossJoin: function (table1, table2, speed, idName) {
+
+            this.animationSpeed = speed
+
+            let answerTable = {}
+
+            this.displayInput([], [], "NaturalJoin", idName)
+            this.createTable(table1, "CJ1", idName)
+            this.createTable(table2, "CJ2", idName)
+            this.joinTables(table1, table2, answerTable, "CJ", idName)
 
         },
 

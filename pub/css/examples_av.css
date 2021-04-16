@@ -1,24 +1,24 @@
-#canvas_Closure, #canvas_NaturalJoin {
+#canvas_Closure, #canvas_NaturalJoin, #canvas_CrossJoin {
     position: relative;
     margin-bottom: 5%;
     margin-top: 5%;
 }
 
 /* contains the inputs such as the attributeSet and the FDSet */
-#inputDiv_Closure, #inputDiv_NaturalJoin {
+#inputDiv_Closure, #inputDiv_NaturalJoin, #inputDiv_CrossJoin {
     width: 50%;
     float: left;
 }
 
-#inputDiv_NaturalJoin {
+#inputDiv_NaturalJoin, #inputDiv_CrossJoin {
     margin-right: 50%;
 }
 
-#buttonsDiv_Closure, #attributeSetDiv_Closure, #FDSetDiv_Closure, #buttonsDiv_NaturalJoin {
+#buttonsDiv_Closure, #attributeSetDiv_Closure, #FDSetDiv_Closure, #buttonsDiv_NaturalJoin, #buttonsDiv_CrossJoin {
     margin-left: 15%;
 }
 
-#buttonsDiv_NaturalJoin{
+#buttonsDiv_NaturalJoin, #buttonsDiv_CrossJoin{
     margin-bottom: 10%;
 }
 
@@ -40,29 +40,29 @@
     opacity: 0;
 }
 
-#codeDiv_Closure, #codeDiv_NaturalJoin {
+#codeDiv_Closure, #codeDiv_NaturalJoin, #codeDiv_CrossJoin {
     background-color: #f5f2f0;
     border-radius: 25px;
     background: #f5f2f0;
     padding: 20px;
 }
 
-#code_Closure, #code_NaturalJoin {
+#code_Closure, #code_NaturalJoin, #code_CrossJoin {
     max-height: 50vh;
     overflow: scroll;
 }
 
-#tableDivNJ1_NaturalJoin, #tableDivNJ2_NaturalJoin {
+#tableDivNJ1_NaturalJoin, #tableDivNJ2_NaturalJoin, #tableDivCJ1_CrossJoin, #tableDivCJ2_CrossJoin {
     width: 50%;
     display: inline-block;
     position: relative;
 }
 
-#tableDivNJ3_NaturalJoin {
+#tableDivNJ3_NaturalJoin, #tableDivCJ3_CrossJoin {
     margin-top: 5%;
 }
 
-#tableNJ1_NaturalJoin, #tableNJ2_NaturalJoin, #tableNJ3_NaturalJoin {
+#tableNJ1_NaturalJoin, #tableNJ2_NaturalJoin, #tableNJ3_NaturalJoin, #tableCJ1_CrossJoin, #tableCJ2_CrossJoin, #tableCJ3_CrossJoin {
     width: 50%;
     margin: 0 25% 0 25%;
     border: 1px solid black;
