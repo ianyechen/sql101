@@ -2,6 +2,7 @@
 
     // this function is currently only in the scope of the anonymous function at the moment.
     function SQL101() {
+
         // global speed variable, used for adjusting the speed of the animations
         this.animationSpeed = 0
         // contains all the animations 
@@ -28,6 +29,9 @@
 
         // used for the MC quiz to know which current question we are on 
         this.quizIndex = 0
+        // used for the quiz maker with options "marks", used to keep track of how many correct the user has scored 
+        this.totalCorrect = 0
+
     }
 
     /* Private properties and functions */
@@ -552,7 +556,7 @@
         },
 
         // creates the answering part of the quiz maker 
-        createAnswerDiv: function (problems, type, table, idName) {
+        createAnswerDiv: function (problems, type, table, idName, options) {
 
             const answerDiv = document.createElement('div')
             answerDiv.id = `answerDiv_${idName}`
@@ -574,11 +578,11 @@
                     const inputElement = document.createElement('input')
                     inputElement.type = "radio"
                     inputElement.value = choice
-                    inputElement.id = choice
+                    inputElement.id = choice + idName
                     inputElement.name = "choice"
 
                     const labelElement = document.createElement('label')
-                    labelElement.setAttribute("for", choice)
+                    labelElement.setAttribute("for", choice + idName)
                     labelElement.innerHTML = `${choice}`
 
                     answeringForm.appendChild(inputElement)
@@ -593,7 +597,7 @@
             submitButton.innerHTML = "Submit"
             submitButton.type = "button"
             submitButton.classList.add(`button_${idName}`)
-            if (type == "MC") submitButton.onclick = () => { this.checkAnswer(problems[this.quizIndex]["answer"], idName) }
+            if (type == "MC") submitButton.onclick = () => { this.checkAnswer(problems[this.quizIndex]["answer"], idName, options) }
             else if (type == "MI") submitButton.onclick = () => { this.checkAnswerMI(problems[this.quizIndex]["FDSet"], table["attributes"], idName) }
 
             const prevButton = document.createElement('button')
@@ -601,7 +605,7 @@
             prevButton.innerHTML = "Prev"
             prevButton.type = "button"
             prevButton.classList.add(`button_${idName}`)
-            prevButton.onclick = () => { this.prevQuestion(problems, type, table["attributes"], idName) }
+            prevButton.onclick = () => { this.prevQuestion(problems, type, table["attributes"], idName, options) }
             prevButton.style.display = "none"
 
             const nextButton = document.createElement('button')
@@ -609,7 +613,8 @@
             nextButton.innerHTML = "Next"
             nextButton.type = "button"
             nextButton.classList.add(`button_${idName}`)
-            nextButton.onclick = () => { this.nextQuestion(problems, type, table["attributes"], idName) }
+            nextButton.onclick = () => { this.nextQuestion(problems, type, table["attributes"], idName, options) }
+            if (options.includes("marks")) nextButton.style.display = "none" // display only the submit button for each question for quiz with "marks"
 
             const feedbackDiv = document.createElement('div')
             feedbackDiv.id = `feedbackDiv_${idName}`
@@ -627,28 +632,47 @@
 
         },
 
-        nextQuestion: function (problems, type, attr, idName) {
+        nextQuestion: function (problems, type, attr, idName, options) {
+
             // display the prev button if you're pressing next on the very first question 
-            if (this.quizIndex == 0) {
+            // can't go to prev button in performance measuring mode 
+            if (this.quizIndex == 0 && !options.includes("marks")) {
                 const prevButton = document.querySelector(`#prevButton_${idName}`)
                 prevButton.style.display = "inline-block"
             }
 
             this.quizIndex++
-            this.changeQuestion(problems, type, attr, idName)
+
+            // if at the final question and you've submitted and you're pressing next, show the results of the quiz 
+            if (options.includes("marks") && this.quizIndex == problems.length) {
+                this.showMarks(problems.length, idName)
+                return
+            }
+
+            // when user is pressing the "try again" button, resets everything 
+            else if (options.includes("marks") && this.quizIndex == problems.length + 1) {
+                this.quizIndex = 0
+                this.totalCorrect = 0
+                const nextButton = document.querySelector(`#nextButton_${idName}`)
+                nextButton.innerHTML = "Next"
+            }
+
+            // if got to very last question, don't display the next button
+            else if (this.quizIndex == problems.length - 1) {
+                const nextButton = document.querySelector(`#nextButton_${idName}`)
+                nextButton.style.display = "none"
+            }
+
+            this.changeQuestion(problems, type, attr, idName, options)
+
             // clear the feedback when switching questions 
             const feedbackDiv = document.querySelector(`#feedbackDiv_${idName}`)
             feedbackDiv.className = ''
             feedbackDiv.innerHTML = ""
 
-            // if got to very last question, don't display the next button
-            if (this.quizIndex == problems.length - 1) {
-                const nextButton = document.querySelector(`#nextButton_${idName}`)
-                nextButton.style.display = "none"
-            }
         },
 
-        prevQuestion: function (problems, type, attr, idName) {
+        prevQuestion: function (problems, type, attr, idName, options) {
             // display the prev button if you're pressing prev on the very last question 
             if (this.quizIndex == problems.length - 1) {
                 const nextButton = document.querySelector(`#nextButton_${idName}`)
@@ -656,7 +680,7 @@
             }
 
             this.quizIndex--
-            this.changeQuestion(problems, type, attr, idName)
+            this.changeQuestion(problems, type, attr, idName, options)
             // clear the feedback when switching questions 
             const feedbackDiv = document.querySelector(`#feedbackDiv_${idName}`)
             feedbackDiv.className = ''
@@ -669,7 +693,7 @@
             }
         },
 
-        changeQuestion: function (problems, type, attr, idName) {
+        changeQuestion: function (problems, type, attr, idName, options) {
 
             const questionDiv = document.querySelector(`#questionDiv_${idName}`)
             questionDiv.innerHTML = `<p>${problems[this.quizIndex]["question"]}</p>`
@@ -684,11 +708,11 @@
                     const inputElement = document.createElement('input')
                     inputElement.type = "radio"
                     inputElement.value = choice
-                    inputElement.id = choice
+                    inputElement.id = choice + idName
                     inputElement.name = "choice"
 
                     const labelElement = document.createElement('label')
-                    labelElement.setAttribute("for", choice)
+                    labelElement.setAttribute("for", choice + idName)
                     labelElement.innerHTML = `${choice}`
 
                     // need to replace the prev children that were already there 
@@ -696,6 +720,14 @@
                     answeringForm.replaceChild(labelElement, answeringForm.childNodes[count++])
                     count++ // to skip the <br> element
 
+                }
+
+                // when switching to new question, reset to submit button 
+                if (options.includes("marks")) {
+                    const nextButton = document.querySelector(`#nextButton_${idName}`)
+                    nextButton.style.display = "none"
+                    const submitButton = document.querySelector(`#submitButton_${idName}`)
+                    submitButton.style.display = "inline-block"
                 }
 
             }
@@ -713,8 +745,31 @@
 
         },
 
+        // used at the end of the quiz maker with performance 
+        showMarks: function (length, idName) {
+
+            const percentage = parseInt(this.totalCorrect / length * 100)
+            const feedbackDiv = document.querySelector(`#feedbackDiv_${idName}`)
+
+            if (percentage < 50) {
+                feedbackDiv.innerHTML = `Your score was ${percentage}%... Try harder next time!`
+                feedbackDiv.classList.remove('feedback-correct')
+                feedbackDiv.classList.add('feedback-incorrect')
+            }
+
+            else {
+                feedbackDiv.innerHTML = `Your score was ${percentage}%. Great job!`
+                feedbackDiv.classList.remove('feedback-incorrect')
+                feedbackDiv.classList.add('feedback-correct')
+            }
+
+            const nextButton = document.querySelector(`#nextButton_${idName}`)
+            nextButton.innerHTML = "Try Again"
+
+        },
+
         // check to see if the given answer is right or wrong for MC
-        checkAnswer: function (answer, idName) {
+        checkAnswer: function (answer, idName, options) {
 
             const answeringForm = document.querySelector(`#answeringForm_${idName}`)
             const data = Object.fromEntries(new FormData(answeringForm).entries())
@@ -725,6 +780,7 @@
                 feedbackDiv.innerHTML = "Please answer the question above!"
                 feedbackDiv.classList.remove('feedback-correct')
                 feedbackDiv.classList.add('feedback-incorrect')
+                return
             }
             // if incorrect answer 
             else if (data["choice"] != answer) {
@@ -737,6 +793,21 @@
                 feedbackDiv.innerHTML = "Correct answer. Good job!"
                 feedbackDiv.classList.remove('feedback-incorrect')
                 feedbackDiv.classList.add('feedback-correct')
+                this.totalCorrect++
+            }
+
+            if (options.includes("marks")) {
+
+                // disables the radio inputs once the user has submitted an answer
+                for (let child of answeringForm.children) {
+                    if (child.tagName == "INPUT") child.disabled = true
+                }
+
+                const nextButton = document.querySelector(`#nextButton_${idName}`)
+                nextButton.style.display = "inline-block"
+                const submitButton = document.querySelector(`#submitButton_${idName}`)
+                submitButton.style.display = "none"
+
             }
 
         },
@@ -1143,14 +1214,16 @@
         },
 
         // the quiz where the user has to make an instance to violate for example a set of FDs
-        createMakeInstanceQuiz: function (problems, table, idName) {
-            this.createAnswerDiv(problems, "MI", table, idName)
+        createMakeInstanceQuiz: function (problems, table, idName, options) {
+            if (!options) options = []
+            this.createAnswerDiv(problems, "MI", table, idName, options)
             this.createTable(table, "MI", idName)
         },
 
         // the quiz where the user has to make a choice for MC questions 
-        createMCQuiz: function (problems, table, idName) {
-            this.createAnswerDiv(problems, "MC", table, idName)
+        createMCQuiz: function (problems, table, idName, options) {
+            if (!options) options = []
+            this.createAnswerDiv(problems, "MC", table, idName, options)
             this.createTable(table, "MC", idName)
         },
 

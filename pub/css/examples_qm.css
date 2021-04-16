@@ -1,5 +1,5 @@
 /* holds the answerDiv and tableDiv */
-#canvas_MC, #canvas_MI  {
+#canvas_MC, #canvas_MI, #canvas_MC_marks  {
     position: relative;
     margin-bottom: 5%;
     margin-top: 5%;
@@ -9,35 +9,35 @@
     min-height: 35vh;
 }
 
-#codeDiv_MC, #codeDiv_MI {
+#codeDiv_MC, #codeDiv_MI, #codeDiv_MC_marks {
     background-color: #f5f2f0;
     border-radius: 25px;
     background: #f5f2f0;
     padding: 20px;
 }
 
-#code_MC, #code_MI {
+#code_MC, #code_MI, #code_MC_marks {
     max-height: 50vh;
     overflow: scroll;
 }
 
 /* contains the instructionsDiv, questionDiv, answeringForm, and feedbackDiv */
-#answerDiv_MC, #answerDiv_MI {
+#answerDiv_MC, #answerDiv_MI, #answerDiv_MC_marks {
     width: 50%;
     float: left;
 }
 
-#instructionsDiv_MC, #answeringForm_MC, #questionDiv_MC, #instructionsDiv_MI, #answeringForm_MI, #questionDiv_MI {
+#instructionsDiv_MC, #answeringForm_MC, #questionDiv_MC, #instructionsDiv_MI, #answeringForm_MI, #questionDiv_MI, #instructionsDiv_MC_marks, #answeringForm_MC_marks, #questionDiv_MC_marks {
     padding-left: 15%;
 }
 
-#tableDivMC_MC, #tableDivMI_MI {
+#tableDivMC_MC, #tableDivMI_MI, #tableDivMC_MC_marks {
     width: 50%;
     display: inline-block;
 }
 
 /* used for any tables created for the quiz maker */
-#tableMC_MC, #tableMI_MI {
+#tableMC_MC, #tableMI_MI, #tableMC_MC_marks {
     width: 50%;
     margin: 0 25% 0 25%;
     border: 1px solid black;
@@ -70,7 +70,7 @@
     padding: 1%;
 } */
 
-#feedbackDiv_MC, #feedbackDiv_MI {
+#feedbackDiv_MC, #feedbackDiv_MI, #feedbackDiv_MC_marks {
     min-height: 10vh;
 }
 

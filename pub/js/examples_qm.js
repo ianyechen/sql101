@@ -3,6 +3,7 @@ console.log("Loading example.js")
 
 const sql = new SQL101()
 const sql2 = new SQL101()
+const sql3 = new SQL101()
 
 function examples() {
 
@@ -64,6 +65,8 @@ function examples() {
     }
 
     sql2.createMakeInstanceQuiz(problems, table, "MI")
+
+    sql3.createMCQuiz(problemsMC, tableMC, "MC_marks", ["marks"])
 
 }
 
