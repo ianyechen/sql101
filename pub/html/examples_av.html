@@ -11,7 +11,7 @@
 
     <!-- fonts used from Google fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
 
     <!-- change href path when deploying to heroku -->
     <!-- <link rel="stylesheet" type="text/css" href="pub/css/library.css">
@@ -24,9 +24,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
 
-    <link rel="stylesheet" type="text/css" href="css/library.css">
     <link rel="stylesheet" type="text/css" href="css/examples_av.css">
     <link rel="stylesheet" type="text/css" href="css/animations.css">
+    <link rel="stylesheet" type="text/css" href="css/library.css">
 
     <script defer type="text/javascript" src="js/sql101.js"></script>
     <script defer type="text/javascript" src="js/examples_av.js"></script>
@@ -38,17 +38,18 @@
     <!-- navigation bar -->
     <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #5680e9; font-size: larger;">
         <div class="container-fluid">
-            <a class="navbar-brand" href="home.html" style="font-size: x-large;">SQL101</a>
+            <a class="navbar-brand" href="home.html"
+                style="font-size: x-large; color: white"><strong>SQL101</strong></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
                 aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
-                    <a class="nav-link" href="examples_qm.html">Quiz Maker</a>
-                    <a class="nav-link" href="examples_av.html">Algorithm Visualization</a>
-                    <a class="nav-link" href="getting-started.html">Getting Started</a>
-                    <a class="nav-link" href="api.html">API</a>
+                    <a class="nav-link" href="examples_qm.html" style="color: white">Quiz Maker</a>
+                    <a class="nav-link" href="examples_av.html" style="color: white">Algorithm Visualization</a>
+                    <a class="nav-link" href="getting-started.html" style="color: white">Getting Started</a>
+                    <a class="nav-link" href="api.html" style="color: white">API</a>
                 </div>
             </div>
         </div>
@@ -58,13 +59,16 @@
 
     <div id="body">
 
-        <h2>Algorithm Visualization</h2>
+        <h2><strong>Algorithm Visualization</strong></h2>
+        <h5 class="marginBottom">There are currently three types of algorithm visualization you can make. <br> 1.
+            Finding Closures <br> 2.
+            Cross Joining Tables <br> 3. Natural Joining Tables </h5>
 
         <h4>Finding Closures</h4>
 
-        <div id="canvas_Closure"></div>
+        <div id="canvas_Closure" class="canvas"></div>
 
-        <div id="codeDiv_Closure">
+        <div id="codeDiv_Closure" class="codeDiv">
             <pre id="code_Closure">
                 <code>
     const attributeSet = "C"
@@ -75,11 +79,13 @@
             </pre>
         </div>
 
+        <hr> 
+
         <h4>Cross Joining Tables</h4>
 
-        <div id="canvas_CrossJoin"></div>
+        <div id="canvas_CrossJoin" class="canvas"></div>
 
-        <div id="codeDiv_CrossJoin">
+        <div id="codeDiv_CrossJoin" class="codeDiv">
             <pre id="code_CrossJoin">
                 <code>
     const table1 = {
@@ -105,11 +111,13 @@
             </pre>
         </div>
 
+        <hr> 
+
         <h4>Natural Joining Tables</h4>
 
-        <div id="canvas_NaturalJoin"></div>
+        <div id="canvas_NaturalJoin" class="canvas"></div>
 
-        <div id="codeDiv_NaturalJoin">
+        <div id="codeDiv_NaturalJoin" class="codeDiv">
             <pre id="code_NaturalJoin">
                 <code>
     const table1 = {

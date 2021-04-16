@@ -1,7 +1,7 @@
 /* holds the answerDiv and tableDiv */
 #canvas_MC, #canvas_MI, #canvas_MC_marks, #canvas_MC_time {
-    position: relative;
-    margin-bottom: 5%;
+    /* position: relative;
+    margin-bottom: 5%; */
 }
 
 #canvas_MI {

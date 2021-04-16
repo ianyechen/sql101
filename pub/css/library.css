@@ -25,6 +25,8 @@ body {
     background: white;
     padding: 40px;
     border: 1px solid black;
+    position: relative;
+    margin-bottom: 5%;
 }
 
 .marginBottom {
