@@ -8,7 +8,7 @@
     <meta nam="viewport" content="width=device-width, initial-scale=1">
 
     <title>SQL 101</title>
-    <link rel="shortcut icon" type="image/jpg" href="images/logo.png"/>
+    <link rel="shortcut icon" type="image/jpg" href="images/logo.png" />
 
     <!-- fonts used from Google fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -64,7 +64,7 @@
         <h5 class="marginBottom">Detailed description of all the
             functions and the configuration you can do with SQL101.</h5>
 
-        <h4>Quiz Maker</h4>
+        <h4><strong>Quiz Maker</strong></h4>
 
         <div class="canvas">
 
@@ -170,7 +170,7 @@
 
         <hr>
 
-        <h4>Algorithm Visualization</h4>
+        <h4><strong>Algorithm Visualization</strong></h4>
 
         <div class="canvas">
 
@@ -233,7 +233,9 @@
 
             <h4><strong>Element IDs</strong></h4>
             <h5 class="marginBottom2">Note: The text inside «» should be replaced with the value of the parameters.
-                <br> Note 2: The «type» can be either "NJ" for natural join or "CJ" for cross join with "1", "2", "3" appended to it. The numbers correspond to which table you are referring to.</h5>
+                <br> Note 2: The «type» can be either "NJ" for natural join or "CJ" for cross join with "1", "2", "3"
+                appended to it. The numbers correspond to which table you are referring to.
+            </h5>
             <h5 class="marginBottom">
                 <ul>
                     <li class="marginBottom2">inputDiv_«idName»</li>
@@ -277,7 +279,9 @@
 
             <h4><strong>Element IDs</strong></h4>
             <h5 class="marginBottom2">Note: The text inside «» should be replaced with the value of the parameters.
-                <br> Note 2: The «type» can be either "NJ" for natural join or "CJ" for cross join with "1", "2", "3" appended to it. The numbers correspond to which table you are referring to.</h5>
+                <br> Note 2: The «type» can be either "NJ" for natural join or "CJ" for cross join with "1", "2", "3"
+                appended to it. The numbers correspond to which table you are referring to.
+            </h5>
             <h5 class="marginBottom">
                 <ul>
                     <li class="marginBottom2">inputDiv_«idName»</li>
@@ -286,6 +290,44 @@
                     <li class="marginBottom2">speedDownButton_«idName»</li>
                     <li class="marginBottom2">nextStepButton_«idName»</li>
                     <li class="marginBottom2">algorithmDiv_«idName»</li>
+                    <li class="marginBottom2">table«type»_«idName»</li>
+                    <li class="marginBottom2">tableDiv«type»_«idName»</li>
+                </ul>
+            </h5>
+
+        </div>
+
+        <hr>
+
+        <h4><strong>Others</strong></h4>
+
+        <div class="canvas">
+
+            <h4><strong>Function</strong></h4>
+            <h5 class="marginBottom">.createTable(table, type, idName) </h5>
+
+            <h4><strong>Parameters</strong></h4>
+            <h5 class="marginBottom2">Note: The text inside «» indicates the type of the variable.</h5>
+            <h5 class="marginBottom">
+                <ul>
+                    <li>table «Object»</li>
+                    <ul class="marginBottom2">
+                        Object :
+                        <li>attributes «[String]» // the attributes for the table (column names) </li>
+                        <li>data «[Object]» // object keys should be from the attributes, the value is the corresponding
+                            value to that attribute </li>
+                    </ul>
+                    <li class="marginBottom2">type «String» // the type of the table, can be "MC", "MI", "CJ1", "CJ2",
+                        "NJ1", or "NJ2"</li>
+                    <li class="marginBottom2">idName «String» // the identifier used to modify the DOM elements </li>
+                </ul>
+            </h5>
+
+            <h4><strong>Element IDs</strong></h4>
+            <h5 class="marginBottom2">Note: The text inside «» should be replaced with the value of the parameters.
+            </h5>
+            <h5 class="marginBottom">
+                <ul>
                     <li class="marginBottom2">table«type»_«idName»</li>
                     <li class="marginBottom2">tableDiv«type»_«idName»</li>
                 </ul>

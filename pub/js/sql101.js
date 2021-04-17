@@ -929,6 +929,16 @@
                     }
                 })
 
+                const tbody = document.querySelector(`#tbody_${idName}`)
+                // disables the table inputs once the user has submitted an answer
+                for (let row of tbody.children) {
+                    for (let column of row.children) {
+                        for (let child of column.children) {
+                            if (child.tagName == "INPUT") child.disabled = false
+                        }
+                    }
+                }
+
                 // when switching to new question, reset to submit button 
                 if (options.includes("marks")) {
                     const nextButton = document.querySelector(`#nextButton_${idName}`)
