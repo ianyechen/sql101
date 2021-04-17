@@ -695,7 +695,7 @@
             submitButton.type = "button"
             submitButton.classList.add(`button_${idName}`)
             if (type == "MC") submitButton.onclick = () => { this.checkAnswer(problems[this.quizIndex]["answer"], idName, options) }
-            else if (type == "MI") submitButton.onclick = () => { this.checkAnswerMI(problems[this.quizIndex]["FDSet"], table["attributes"], idName) }
+            else if (type == "MI") submitButton.onclick = () => { this.checkAnswerMI(problems[this.quizIndex]["FDSet"], table["attributes"], idName, options) }
 
             const prevButton = document.createElement('button')
             prevButton.id = `prevButton_${idName}`
@@ -925,9 +925,17 @@
 
                 Array.from(Array(3)).forEach((x, i) => {
                     for (let attribute of attr) {
-                        document.querySelector(`#${attribute + i}`).value = ""
+                        document.querySelector(`#${attribute + i}_${idName}`).value = ""
                     }
                 })
+
+                // when switching to new question, reset to submit button 
+                if (options.includes("marks")) {
+                    const nextButton = document.querySelector(`#nextButton_${idName}`)
+                    nextButton.style.display = "none"
+                    const submitButton = document.querySelector(`#submitButton_${idName}`)
+                    submitButton.style.display = "inline-block"
+                }
 
             }
 
@@ -1001,7 +1009,7 @@
         },
 
         // check to see if the given answer is right or wrong for MI
-        checkAnswerMI: function (FDSet, attributes, idName) {
+        checkAnswerMI: function (FDSet, attributes, idName, options) {
 
             // will contain all the form values in an obj
             // the key is the attr + row number (A1, B2), the value will be the value from the table
@@ -1014,7 +1022,7 @@
             // populating formValues obj
             Array.from(Array(3)).forEach((x, i) => {
                 for (let attribute of attributes) {
-                    const value = document.querySelector(`#${attribute + i}`).value
+                    const value = document.querySelector(`#${attribute + i}_${idName}`).value
                     if (!value) validAnswer = false
                     formValues[`${attribute + i}`] = value
                 }
@@ -1070,12 +1078,30 @@
                 feedbackDiv.innerHTML = "Correct answer. Good job!"
                 feedbackDiv.classList.remove('feedback-incorrect')
                 feedbackDiv.classList.add('feedback-correct')
+                this.totalCorrect++
             }
 
             else {
                 feedbackDiv.innerHTML = "Incorrect answer. Please try again!"
                 feedbackDiv.classList.remove('feedback-correct')
                 feedbackDiv.classList.add('feedback-incorrect')
+            }
+
+            if (options.includes("marks")) {
+
+                const tbody = document.querySelector(`#tbody_${idName}`)
+                // disables the table inputs once the user has submitted an answer
+                for (let row of tbody.children) {
+                    for (let column of row.children) {
+                        for (let child of column.children) {
+                            if (child.tagName == "INPUT") child.disabled = true
+                }}}
+
+                const nextButton = document.querySelector(`#nextButton_${idName}`)
+                nextButton.style.display = "inline-block"
+                const submitButton = document.querySelector(`#submitButton_${idName}`)
+                submitButton.style.display = "none"
+
             }
 
         },
@@ -1178,7 +1204,7 @@
                         const input = document.createElement('input')
                         input.setAttribute("type", "text")
                         input.setAttribute("name", `${attribute + i}`)
-                        input.setAttribute("id", `${attribute + i}`)
+                        input.setAttribute("id", `${attribute + i}_${idName}`)
                         input.classList.add("tableInput")
                         dataCol.appendChild(input)
                         dataRow.appendChild(dataCol)

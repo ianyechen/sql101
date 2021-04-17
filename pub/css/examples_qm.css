@@ -4,7 +4,7 @@
     margin-bottom: 5%; */
 }
 
-#canvas_MI {
+#canvas_MI, #canvas_MI_marks {
     min-height: 65vh;
 }
 
@@ -15,29 +15,29 @@
     padding: 20px; */
 }
 
-#code_MC, #code_MI, #code_MC_marks, #code_MC_time {
+#code_MC, #code_MI, #code_MC_marks, #code_MC_time, #code_MI_marks {
     max-height: 50vh;
     overflow: scroll;
 }
 
 /* contains the instructionsDiv, questionDiv, answeringForm, and feedbackDiv */
-#answerDiv_MC, #answerDiv_MI, #answerDiv_MC_marks, #answerDiv_MC_time {
+#answerDiv_MC, #answerDiv_MI, #answerDiv_MC_marks, #answerDiv_MC_time, #answerDiv_MI_marks {
     width: 50%;
     float: left;
 }
 
 #instructionsDiv_MC, #answeringForm_MC, #questionDiv_MC, #instructionsDiv_MI, #answeringForm_MI, #questionDiv_MI, #instructionsDiv_MC_marks, #answeringForm_MC_marks, #questionDiv_MC_marks,
-#instructionsDiv_MC_time, #answeringForm_MC_time, #questionDiv_MC_time {
+#instructionsDiv_MC_time, #answeringForm_MC_time, #questionDiv_MC_time, #instructionsDiv_MI_marks, #answeringForm_MI_marks, #questionDiv_MI_marks {
     padding-left: 15%;
 }
 
-#tableDivMC_MC, #tableDivMI_MI, #tableDivMC_MC_marks, #tableDivMC_MC_time {
+#tableDivMC_MC, #tableDivMI_MI, #tableDivMC_MC_marks, #tableDivMC_MC_time, #tableDivMI_MI_marks {
     width: 50%;
     display: inline-block;
 }
 
 /* used for any tables created for the quiz maker */
-#tableMC_MC, #tableMI_MI, #tableMC_MC_marks, #tableMC_MC_time {
+#tableMC_MC, #tableMI_MI, #tableMC_MC_marks, #tableMC_MC_time, #tableMI_MI_marks {
     width: 50%;
     margin: 0 25% 0 25%;
     border: 1px solid black;
@@ -46,7 +46,7 @@
     text-align: center;
 }
 
-#tableMI_MI {
+#tableMI_MI, #tableMI_MI_marks {
     margin: 10% 40% 10% 10%;
 }
 
@@ -70,7 +70,7 @@
     padding: 1%;
 } */
 
-#feedbackDiv_MC, #feedbackDiv_MI, #feedbackDiv_MC_marks, #feedbackDiv_MC_time {
+#feedbackDiv_MC, #feedbackDiv_MI, #feedbackDiv_MC_marks, #feedbackDiv_MC_time, #feedbackDiv_MI_marks {
     min-height: 10vh;
 }
 

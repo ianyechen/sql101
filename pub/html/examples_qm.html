@@ -208,6 +208,38 @@
             </pre>
         </div>
 
+        <div id="canvas_MI_marks" class="canvas"></div>
+
+        <div id="codeDiv_MI_marks" class="codeDiv">
+            <pre id="code_MI_marks">
+                <code class="language-js">
+    const problems = [
+        {
+            "instruction": "Given the following FDs, make an instance of the relation that violates the set of FDs.",
+            "question": "S = { A -> BC, B -> D }",
+            "FDSet": ["A->BC", "B->D"]
+        },
+        {
+            "instruction": "Changing the instructions just to show that it's dynamic :) ",
+            "question": "S = { BC -> D, AE -> B }",
+            "FDSet": ["BC->D", "AE->B"]
+        },
+        {
+            "instruction": "Given the following FDs, make an instance of the relation that violates the set of FDs.",
+            "question": "S = { A -> B, C -> D, B -> E }",
+            "FDSet": ["A->B", "C->D", "B->E"]
+        },
+    ]
+
+    const table = {
+        "attributes": ["A", "B", "C", "D", "E"],
+    }
+
+    sql.createMakeInstanceQuiz(problems, table, "MI_marks", ["marks"])
+                </code>
+            </pre>
+        </div>
+
         <h4>With Time</h4>
         <h5>The time option will add a stopwatch beside the button to indicate the time elapsed since the user started
             the quiz. </h5>

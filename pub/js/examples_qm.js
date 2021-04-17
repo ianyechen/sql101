@@ -5,6 +5,7 @@ const sql = new SQL101()
 const sql2 = new SQL101()
 const sql3 = new SQL101()
 const sql4 = new SQL101()
+const sql5 = new SQL101()
 
 function examples() {
 
@@ -75,7 +76,9 @@ function examples() {
 
     sql3.createMCQuiz(problemsMC, tableMC, "MC_marks", ["marks"])
 
-    sql4.createMCQuiz(problemsMC, tableMC, "MC_time", ["marks", "time"])
+    sql4.createMakeInstanceQuiz(problems, table, "MI_marks", ["marks"])
+
+    sql5.createMCQuiz(problemsMC, tableMC, "MC_time", ["marks", "time"])
 
 }
 
