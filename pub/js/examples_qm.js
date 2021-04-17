@@ -54,17 +54,20 @@ function examples() {
         {
             "instruction": "Given the following FDs, make an instance of the relation that violates the set of FDs.",
             "question": "S = { A -> BC, B -> D }",
-            "FDSet": ["A->BC", "B->D"]
+            "FDSet": ["A->BC", "B->D"],
+            "type": "violates"
         },
         {
             "instruction": "Changing the instructions just to show that it's dynamic :) ",
             "question": "S = { BC -> D, AE -> B }",
-            "FDSet": ["BC->D", "AE->B"]
+            "FDSet": ["BC->D", "AE->B"],
+            "type": "violates",
         },
         {
-            "instruction": "Given the following FDs, make an instance of the relation that violates the set of FDs.",
+            "instruction": "Given the following FDs, make an instance of the relation that satisfies the set of FDs.",
             "question": "S = { A -> B, C -> D, B -> E }",
-            "FDSet": ["A->B", "C->D", "B->E"]
+            "FDSet": ["A->B", "C->D", "B->E"],
+            "type": "satisfies"
         },
     ]
 

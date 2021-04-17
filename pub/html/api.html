@@ -131,15 +131,13 @@
                         Object :
                         <li>instruction «String» // the instruction to be displayed </li>
                         <li>question «String» // the question to be displayed </li>
-                        <li>choices «[String]» // the available choices for the user to select from </li>
                         <li>answer «[String]» // the correct answer</li>
+                        <li>type «String» // the type of the question, can be "violates" or "satisfies" the FDs</li>
                     </ul>
                     <li>table «Object»</li>
                     <ul class="marginBottom2">
                         Object :
                         <li>attributes «[String]» // the attributes for the table (column names) </li>
-                        <li>data «[Object]» // object keys should be from the attributes, the value is the corresponding
-                            value to that attribute </li>
                     </ul>
                     <li class="marginBottom2">idName «String» // the identifier used to modify the DOM elements </li>
                     <li class="marginBottom2">options «[String]» // pass in the options here ("marks", "time") </li>

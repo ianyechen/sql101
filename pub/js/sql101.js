@@ -579,7 +579,7 @@
             // }
 
             this.doAnimation()
-            
+
         },
 
         restartAnimation: function (type, idName) {
@@ -695,7 +695,7 @@
             submitButton.type = "button"
             submitButton.classList.add(`button_${idName}`)
             if (type == "MC") submitButton.onclick = () => { this.checkAnswer(problems[this.quizIndex]["answer"], idName, options) }
-            else if (type == "MI") submitButton.onclick = () => { this.checkAnswerMI(problems[this.quizIndex]["FDSet"], table["attributes"], idName, options) }
+            else if (type == "MI") submitButton.onclick = () => { this.checkAnswerMI(problems[this.quizIndex]["FDSet"], table["attributes"], idName, options, problems[this.quizIndex]["type"]) }
 
             const prevButton = document.createElement('button')
             prevButton.id = `prevButton_${idName}`
@@ -1009,7 +1009,7 @@
         },
 
         // check to see if the given answer is right or wrong for MI
-        checkAnswerMI: function (FDSet, attributes, idName, options) {
+        checkAnswerMI: function (FDSet, attributes, idName, options, type) {
 
             // will contain all the form values in an obj
             // the key is the attr + row number (A1, B2), the value will be the value from the table
@@ -1072,7 +1072,7 @@
             }
 
             // do this for questions asking to violate the FD's
-            correct = !correct
+            if (type == "violates") correct = !correct
 
             if (correct) {
                 feedbackDiv.innerHTML = "Correct answer. Good job!"
@@ -1095,7 +1095,9 @@
                     for (let column of row.children) {
                         for (let child of column.children) {
                             if (child.tagName == "INPUT") child.disabled = true
-                }}}
+                        }
+                    }
+                }
 
                 const nextButton = document.querySelector(`#nextButton_${idName}`)
                 nextButton.style.display = "inline-block"
