@@ -35,7 +35,7 @@ function examples() {
             "answer": "9 rows",
         },
         {
-            "instruction": "Changing the instructions just to show that it's dynamic :) But pick the right answer!",
+            "instruction": "Changing the instructions just to show that it's dynamic :) ",
             "question": "If we do SELECT max(grade) FROM RELATION, what would be in the resulting relation?",
             "choices": ["e^2", "3.14", "95", "0"],
             "answer": "95",
