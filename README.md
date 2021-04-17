@@ -7,19 +7,24 @@ Link to landing page: https://sql101.herokuapp.com/
 It is very simple to get set up with SQL101. Follow the instructions below and start being creative!
 
 ### CSS: Copy the stylesheet into your HTML file to load the CSS.
-```css
+```html
+<!-- CSS file needed for the Quiz Maker -->
 <link rel="stylesheet" type="text/css" href="css/examples_qm.css">
+
+<!-- CSS file needed for the Algorithm Visualization -->
 <link rel="stylesheet" type="text/css" href="css/examples_av.css">
+
+<!-- CSS file used for common styling for both the functionalities -->
 <link rel="stylesheet" type="text/css" href="css/common.css">
 ```
 > **Note:** You do not have to include the link for the specific functionality if you don't need it. For example, you don't have to include the link for examples_av.css if you are not using any algorithm visualizations.
 
-### JS: Copy the script into your HTML file to load the JS and construct the SQL101 object.
-```javascript
+### JS: Copy the script into your HTML file to load the JS.
+```html
 <script defer type="text/javascript" src="js/sql101.js"></script>
 ```
 
-### JS: Copy the script into your HTML file to load the JS.
+### JS: Construct the SQL101 object.
 ```javascript
 const sql = new SQL101()
 ```
@@ -48,6 +53,7 @@ Here we show an example of how to create a table using SQL101.
     text-align: center;
 }
 ```
+> **Note:** You can modify the styles of any elements created and used in the library, simply link your own stylesheets and style the elements with the id. The ids follow a specific format discussed more in the API section.
 
 ### JS
 ```javascript
@@ -79,7 +85,7 @@ function example() {
 
 example()
 ```
-> **IMPORTANT:** You must give an element an id of canvas_«id» as that is where elements will be appended to. </h5>
+> **IMPORTANT:** You must give an element an id of canvas_«id» as that is where elements will be appended to (where «id» is the idName you pass in as a parameter to the available functions). </h5>
 
 ## Documentation 
 [See a more detailed documentation!](https://sql101.herokuapp.com/api.html)  
