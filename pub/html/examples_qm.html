@@ -8,7 +8,7 @@
     <meta nam="viewport" content="width=device-width, initial-scale=1">
 
     <title>SQL 101</title>
-    <link rel="shortcut icon" type="image/jpg" href="images/logo.png"/>
+    <link rel="shortcut icon" type="image/jpg" href="images/logo.png" />
 
     <!-- fonts used from Google fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -70,7 +70,10 @@
 
         <h4><strong>Multiple Choice</strong></h4>
         <h5>A multiple choice styled quiz where the user can navigate freely between questions. There will be feedback
-            upon the user selection an answer and submitting it.</h5>
+            upon the user selecting an answer and submitting it. The user can also submit as many times as they wish.
+            The instructions, questions, choices, and the table data can all be configured. See the API section for more
+            details.
+        </h5>
 
         <div id="canvas_MC" class="canvas"></div>
 
@@ -123,7 +126,11 @@
 
         <h4><strong>Make Instance</strong></h4>
         <h5>A quiz where the user needs to make an instance of the table based on the question. The user can navigate
-            freely between questions. There will be feedback upon the user selection an answer and submitting it.</h5>
+            freely between questions. There will be feedback upon the user selecting an answer and submitting it. The
+            user can also submit as many times as they wish. Be sure to read the question properly, sometimes it's
+            asking to make an instance that VIOLATES the FDs. The instructions, questions, set of FDs, and the table
+            attributes can all be configured. See the API section for more
+            details.</h5>
 
         <div id="canvas_MI" class="canvas"></div>
 
@@ -169,7 +176,7 @@
         <h4><strong>With Performance</strong></h4>
         <h5>The performance option allows for the score for the quiz to be tracked. The user is no longer able to
             navigate freely between questions. The user moves on to the next question only if the user has submitted
-            their answer.</h5>
+            their answer. The scores will be displayed after the user has completed the entire quiz.</h5>
 
         <div id="canvas_MC_marks" class="canvas"></div>
 

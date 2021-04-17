@@ -35,7 +35,7 @@ function examples() {
             "answer": "9 rows",
         },
         {
-            "instruction": "Changing the instructions just to show that it's dynamic :) ",
+            "instruction": "Changing the instructions just to show that it's dynamic :) But pick the right answer!",
             "question": "If we do SELECT max(grade) FROM RELATION, what would be in the resulting relation?",
             "choices": ["e^2", "3.14", "95", "0"],
             "answer": "95",
@@ -58,7 +58,7 @@ function examples() {
             "type": "violates"
         },
         {
-            "instruction": "Changing the instructions just to show that it's dynamic :) ",
+            "instruction": "Changing the instructions just to show that it's dynamic :) But make it violate! ",
             "question": "S = { BC -> D, AE -> B }",
             "FDSet": ["BC->D", "AE->B"],
             "type": "violates",

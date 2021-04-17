@@ -71,13 +71,18 @@
         <div class="canvas">
 
             <h4>CSS</h4>
-            <h5>Copy the stylesheet into your HTML file to load the CSS.</h5>
+            <h5>Copy the stylesheets into your HTML file to load the CSS. </h5>
 
             <div class="centerText">
                 <pre class="code">
                     <code class="language-html">
+    &lt;!-- CSS file needed for the Quiz Maker --&gt;
     &lt;link rel="stylesheet" type="text/css" href="css/examples_qm.css"&gt;
+
+    &lt;!-- CSS file needed for the Algorithm Visualization --&gt;
     &lt;link rel="stylesheet" type="text/css" href="css/examples_av.css"&gt;
+
+    &lt;!-- CSS file used for common styling for both the functionalities --&gt;
     &lt;link rel="stylesheet" type="text/css" href="css/common.css"&gt;
                     </code>
                 </pre>
@@ -131,7 +136,7 @@
 
             <h4>CSS</h4>
 
-            <div class="marginBottom">
+            <div>
                 <pre class="code">
                     <code class="language-css">
     #canvas_Example {
@@ -150,6 +155,8 @@
                     </code>
                 </pre>
             </div>
+            <h5 class="marginBottom" style="margin-top: 2%;"> Note: You can modify the styles of any elements created
+                and used in the library, simply link your own stylesheets and style the elements with the id. The ids follow a specific format discussed more in the API section.</h5>
 
             <h4>JS</h4>
 
@@ -187,7 +194,9 @@
                 </pre>
             </div>
 
-            <h5 style="margin-top: 2%;">IMPORTANT: You must give an element an id of canvas_«id» as that is where elements will be appended to. </h5>
+            <h5 style="margin-top: 2%;">IMPORTANT: You must give an element an id of canvas_«id» as that is where
+                elements will be appended to (where «id» is the idName you pass in as a parameter to the available
+                functions). </h5>
 
         </div>
 
