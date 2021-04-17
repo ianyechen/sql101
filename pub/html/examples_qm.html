@@ -11,7 +11,7 @@
 
     <!-- fonts used from Google fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
 
     <!-- change href path when deploying to heroku -->
     <!-- <link rel="stylesheet" type="text/css" href="pub/css/library.css">
@@ -27,6 +27,10 @@
     <link rel="stylesheet" type="text/css" href="css/examples_qm.css">
     <link rel="stylesheet" type="text/css" href="css/animations.css">
     <link rel="stylesheet" type="text/css" href="css/library.css">
+
+    <!-- https://dev.to/beumsk/how-to-show-code-in-a-page-prism-code-highlighter-3hcc -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.0/themes/prism.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.0/prism.min.js"></script>
 
     <script defer type="text/javascript" src="js/sql101.js"></script>
     <script defer type="text/javascript" src="js/examples_qm.js"></script>
@@ -71,7 +75,7 @@
 
         <div id="codeDiv_MC" class="codeDiv">
             <pre id="code_MC">
-                <code>
+                <code class="language-js">
     const tableMC = {
         "attributes": ["sID", "oID", "grade"],
         "data": [
@@ -121,7 +125,7 @@
 
         <div id="codeDiv_MI" class="codeDiv">
             <pre id="code_MI">
-                <code>
+                <code class="language-js">
     const problems = [
         {
             "question": "Given the following FDs, make an instance of the relation that violates the set of FDs. S = { A -> BC, B -> D }",
@@ -145,7 +149,7 @@
                 </code>
             </pre>
         </div>
-        
+
         <hr>
 
         <h2><strong>Quiz Options</strong></h2>
@@ -161,7 +165,7 @@
 
         <div id="codeDiv_MC_marks" class="codeDiv">
             <pre id="code_MC_marks">
-                <code>
+                <code class="language-js">
     const tableMC = {
         "attributes": ["sID", "oID", "grade"],
         "data": [
@@ -211,7 +215,7 @@
 
         <div id="codeDiv_MC_time" class="codeDiv">
             <pre id="code_MC_time">
-                <code>
+                <code class="language-js">
     const tableMC = {
         "attributes": ["sID", "oID", "grade"],
         "data": [

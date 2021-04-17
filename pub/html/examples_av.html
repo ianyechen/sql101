@@ -11,7 +11,7 @@
 
     <!-- fonts used from Google fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
 
     <!-- change href path when deploying to heroku -->
     <!-- <link rel="stylesheet" type="text/css" href="pub/css/library.css">
@@ -27,6 +27,10 @@
     <link rel="stylesheet" type="text/css" href="css/examples_av.css">
     <link rel="stylesheet" type="text/css" href="css/animations.css">
     <link rel="stylesheet" type="text/css" href="css/library.css">
+
+    <!-- https://dev.to/beumsk/how-to-show-code-in-a-page-prism-code-highlighter-3hcc -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.0/themes/prism.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.0/prism.min.js"></script>
 
     <script defer type="text/javascript" src="js/sql101.js"></script>
     <script defer type="text/javascript" src="js/examples_av.js"></script>
@@ -70,7 +74,7 @@
 
         <div id="codeDiv_Closure" class="codeDiv">
             <pre id="code_Closure">
-                <code>
+                <code class="language-js">
     const attributeSet = "C"
     const FDSet = ["AC->F", "CEF->B", "C->D", "DC->A"]
 
@@ -79,7 +83,7 @@
             </pre>
         </div>
 
-        <hr> 
+        <hr>
 
         <h4>Cross Joining Tables</h4>
 
@@ -87,7 +91,7 @@
 
         <div id="codeDiv_CrossJoin" class="codeDiv">
             <pre id="code_CrossJoin">
-                <code>
+                <code class="language-js">
     const table1 = {
         "attributes": ["A", "B", "C"],
         "data": [
@@ -111,7 +115,7 @@
             </pre>
         </div>
 
-        <hr> 
+        <hr>
 
         <h4>Natural Joining Tables</h4>
 
@@ -119,7 +123,7 @@
 
         <div id="codeDiv_NaturalJoin" class="codeDiv">
             <pre id="code_NaturalJoin">
-                <code>
+                <code class="language-js">
     const table1 = {
         "attributes": ["A", "B", "C"],
         "data": [
