@@ -348,7 +348,10 @@
 
             e.target.style.opacity = 1 // want to show closures after each animation "step", no need to hide it anymore 
             // want to keep the last animation (FD going back), but don't keep for tables (natural join animations)
-            if (!e.target.id.includes("table") && this.animationIndex == this.animationArr.length) return
+            if (!e.target.id.includes("table") && this.animationIndex == this.animationArr.length) {
+                this.animatingArr = []
+                return
+            }
 
             // after fadeIn has done, you want to fadeOut
             if (e.animationName == "fadeIn") {
@@ -462,7 +465,7 @@
             speedUpButton.onclick = () => { this.changeSpeed("faster") }
             speedDownButton.onclick = () => { this.changeSpeed("slower") }
             pauseButton.onclick = () => { this.toggleAnimationPause(idName) }
-            nextStepButton.onclick = () => { this.nextAnimation(idName) }
+            nextStepButton.onclick = () => { this.nextAnimation(type, idName) }
             prevButton.onclick = () => { this.prevAnimation() }
 
             buttonsDiv.appendChild(speedUpButton)
@@ -518,13 +521,51 @@
 
         },
 
-        nextAnimation: function (idName) {
+        nextAnimation: function (type, idName) {
+
             if (this.animatingArr.length != 0) return // can't proceed until animations have finished
             const pauseButton = document.querySelector(`#pauseButton_${idName}`)
             pauseButton.disabled = true
             // animatingArr.splice(0, animatingArr.length)
             // animationIndex++
             this.animationStep = true
+
+            const nextStepButton = document.querySelector(`#nextStepButton_${idName}`)
+
+            if (this.animationIndex == this.animationArr.length - 1) nextStepButton.innerHTML = "Replay"
+            // to replay the animations, go back and hide every output again
+            else if (this.animationIndex == this.animationArr.length) {
+
+                nextStepButton.innerHTML = "Next Step"
+                this.animationIndex = 0
+
+                if (type.includes("Closure")) {
+                    let count = 0
+                    while (document.querySelector(`#closure${count}`)) {
+                        const closure = document.querySelector(`#closure${count}`)
+                        closure.style.opacity = 0
+                        count++
+                    }
+                }
+
+                else if (type.includes("CrossJoin")) {
+                    const tbody = document.querySelector("#tbody_CJ3")
+                    for (let row of tbody.children) {
+                        for (let child of row.children) if (child.tagName == "TD") child.style.opacity = 0
+                    }
+                }
+
+                else if (type.includes("NaturalJoin")) {
+                    const tbody = document.querySelector("#tbody_NJ3")
+                    for (let row of tbody.children) {
+                        for (let child of row.children) if (child.tagName == "TD") child.style.opacity = 0
+                    }
+                }
+
+                return
+                
+            }
+
             this.doAnimation()
         },
 
@@ -1157,7 +1198,7 @@
                             dataRow["Table2." + attr] = dataRow[attr]
                             delete dataRow[attr]
                         }
-                        
+
                     }
 
                     else attrAfterJoin.push(attr)
@@ -1233,7 +1274,7 @@
                         })
 
                         // only push if you need to animate the headers of the tables 
-                        if (attrStr1 != "") this.pushAnimationToArr() 
+                        if (attrStr1 != "") this.pushAnimationToArr()
 
                         let newRow = new Object()
 
@@ -1371,7 +1412,7 @@
 
             let answerTable = {}
 
-            this.displayInput([], [], "NaturalJoin", idName)
+            this.displayInput([], [], "CrossJoin", idName)
             this.createTable(table1, "CJ1", idName)
             this.createTable(table2, "CJ2", idName)
             this.joinTables(table1, table2, answerTable, "CJ", idName)
