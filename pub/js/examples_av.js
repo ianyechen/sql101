@@ -4,6 +4,7 @@ console.log("Loading example.js")
 const sql = new SQL101()
 const sql2 = new SQL101()
 const sql3 = new SQL101()
+const sql4 = new SQL101()
 
 function examples() {
 
@@ -53,6 +54,8 @@ function examples() {
     }
 
     sql3.animationNaturalJoin(tableNJ1, tableNJ2, 500, "NaturalJoin")
+
+    sql4.animationNaturalLeftJoin(tableNJ1, tableNJ2, 500, "NaturalLeftJoin")
 
 }
 

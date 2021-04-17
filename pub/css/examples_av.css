@@ -1,24 +1,24 @@
-#canvas_Closure, #canvas_NaturalJoin, #canvas_CrossJoin {
+#canvas_Closure, #canvas_NaturalJoin, #canvas_CrossJoin, #canvas_NaturalLeftJoin {
     /* position: relative;
     margin-bottom: 5%;
     margin-top: 5%; */
 }
 
 /* contains the inputs such as the attributeSet and the FDSet */
-#inputDiv_Closure, #inputDiv_NaturalJoin, #inputDiv_CrossJoin {
+#inputDiv_Closure, #inputDiv_NaturalJoin, #inputDiv_CrossJoin, #inputDiv_NaturalLeftJoin {
     width: 50%;
     float: left;
 }
 
-#inputDiv_NaturalJoin, #inputDiv_CrossJoin {
+#inputDiv_NaturalJoin, #inputDiv_CrossJoin, #inputDiv_NaturalLeftJoin {
     margin-right: 50%;
 }
 
-#buttonsDiv_Closure, #attributeSetDiv_Closure, #FDSetDiv_Closure, #buttonsDiv_NaturalJoin, #buttonsDiv_CrossJoin {
+#buttonsDiv_Closure, #attributeSetDiv_Closure, #FDSetDiv_Closure, #buttonsDiv_NaturalJoin, #buttonsDiv_CrossJoin, #buttonsDiv_NaturalLeftJoin {
     margin-left: 15%;
 }
 
-#buttonsDiv_NaturalJoin, #buttonsDiv_CrossJoin{
+#buttonsDiv_NaturalJoin, #buttonsDiv_CrossJoin, #buttonsDiv_NaturalLeftJoin {
     margin-bottom: 10%;
 }
 
@@ -40,29 +40,29 @@
     opacity: 0;
 }
 
-#codeDiv_Closure, #codeDiv_NaturalJoin, #codeDiv_CrossJoin {
+#codeDiv_Closure, #codeDiv_NaturalJoin, #codeDiv_CrossJoin, #codeDiv_NaturalLeftJoin {
     /* background-color: #f5f2f0;
     border-radius: 25px;
     background: #f5f2f0;
     padding: 20px; */
 }
 
-#code_Closure, #code_NaturalJoin, #code_CrossJoin {
+#code_Closure, #code_NaturalJoin, #code_CrossJoin, #code_NaturalLeftJoin {
     max-height: 50vh;
     overflow: scroll;
 }
 
-#tableDivNJ1_NaturalJoin, #tableDivNJ2_NaturalJoin, #tableDivCJ1_CrossJoin, #tableDivCJ2_CrossJoin {
+#tableDivNJ1_NaturalJoin, #tableDivNJ2_NaturalJoin, #tableDivCJ1_CrossJoin, #tableDivCJ2_CrossJoin, #tableDivNLJ1_NaturalLeftJoin, #tableDivNLJ2_NaturalLeftJoin {
     width: 50%;
     display: inline-block;
     position: relative;
 }
 
-#tableDivNJ3_NaturalJoin, #tableDivCJ3_CrossJoin {
+#tableDivNJ3_NaturalJoin, #tableDivCJ3_CrossJoin, #tableDivNLJ3_NaturalLeftJoin {
     margin-top: 5%;
 }
 
-#tableNJ1_NaturalJoin, #tableNJ2_NaturalJoin, #tableNJ3_NaturalJoin, #tableCJ1_CrossJoin, #tableCJ2_CrossJoin, #tableCJ3_CrossJoin {
+#tableNJ1_NaturalJoin, #tableNJ2_NaturalJoin, #tableNJ3_NaturalJoin, #tableCJ1_CrossJoin, #tableCJ2_CrossJoin, #tableCJ3_CrossJoin, #tableNLJ1_NaturalLeftJoin, #tableNLJ2_NaturalLeftJoin, #tableNLJ3_NaturalLeftJoin {
     width: 50%;
     margin: 0 25% 0 25%;
     border: 1px solid black;

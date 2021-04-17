@@ -233,7 +233,8 @@
 
             <h4><strong>Element IDs</strong></h4>
             <h5 class="marginBottom2">Note: The text inside «» should be replaced with the value of the parameters.
-                <br> Note 2: The «type» can be either "NJ" for natural join or "CJ" for cross join with "1", "2", "3"
+                <br> Note 2: The «type» can be either "NJ" for natural join or "CJ" for cross join or "NLJ" for natural
+                left join with "1", "2", "3"
                 appended to it. The numbers correspond to which table you are referring to.
             </h5>
             <h5 class="marginBottom">
@@ -279,7 +280,55 @@
 
             <h4><strong>Element IDs</strong></h4>
             <h5 class="marginBottom2">Note: The text inside «» should be replaced with the value of the parameters.
-                <br> Note 2: The «type» can be either "NJ" for natural join or "CJ" for cross join with "1", "2", "3"
+                <br> Note 2: The «type» can be either "NJ" for natural join or "CJ" for cross join or "NLJ" for natural
+                left join with "1", "2", "3"
+                appended to it. The numbers correspond to which table you are referring to.
+            </h5>
+            <h5 class="marginBottom">
+                <ul>
+                    <li class="marginBottom2">inputDiv_«idName»</li>
+                    <li class="marginBottom2">buttonsDiv_«idName»</li>
+                    <li class="marginBottom2">speedUpButton_«idName»</li>
+                    <li class="marginBottom2">speedDownButton_«idName»</li>
+                    <li class="marginBottom2">nextStepButton_«idName»</li>
+                    <li class="marginBottom2">algorithmDiv_«idName»</li>
+                    <li class="marginBottom2">table«type»_«idName»</li>
+                    <li class="marginBottom2">tableDiv«type»_«idName»</li>
+                </ul>
+            </h5>
+
+            <hr>
+
+            <h4><strong>Function</strong></h4>
+            <h5 class="marginBottom">.animationNaturalLeftJoin(table1, table2, speed, idName) </h5>
+
+            <h4><strong>Parameters</strong></h4>
+            <h5 class="marginBottom2">Note: The text inside «» indicates the type of the variable.</h5>
+            <h5 class="marginBottom">
+                <ul>
+                    <li>table1 «Object»</li>
+                    <ul class="marginBottom2">
+                        Object :
+                        <li>attributes «[String]» // the attributes for the table (column names) </li>
+                        <li>data «[Object]» // object keys should be from the attributes, the value is the corresponding
+                            value to that attribute </li>
+                    </ul>
+                    <li>table2 «Object»</li>
+                    <ul class="marginBottom2">
+                        Object :
+                        <li>attributes «[String]» // the attributes for the table (column names) </li>
+                        <li>data «[Object]» // object keys should be from the attributes, the value is the corresponding
+                            value to that attribute </li>
+                    </ul>
+                    <li class="marginBottom2">speed «String» // the initial speed of the animations </li>
+                    <li class="marginBottom2">idName «String» // the identifier used to modify the DOM elements </li>
+                </ul>
+            </h5>
+
+            <h4><strong>Element IDs</strong></h4>
+            <h5 class="marginBottom2">Note: The text inside «» should be replaced with the value of the parameters.
+                <br> Note 2: The «type» can be either "NJ" for natural join or "CJ" for cross join or "NLJ" for natural
+                left join with "1", "2", "3"
                 appended to it. The numbers correspond to which table you are referring to.
             </h5>
             <h5 class="marginBottom">

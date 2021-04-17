@@ -609,6 +609,13 @@
                 }
             }
 
+            else if (type.includes("NaturalLeftJoin")) {
+                const tbody = document.querySelector("#tbody_NLJ3")
+                for (let row of tbody.children) {
+                    for (let child of row.children) if (child.tagName == "TD") child.style.opacity = 0
+                }
+            }
+
         },
 
         checkFirstAnimationIndex: function (id) {
@@ -1148,7 +1155,7 @@
             for (let attribute of attributes) {
                 const headingCol = document.createElement('th')
                 headingCol.innerHTML = attribute
-                if (type.includes("NJ") || type.includes("CJ")) headingCol.id = `tableHeader${attribute}_${type}`
+                if (type.includes("NJ") || type.includes("CJ") || type.includes("NLJ")) headingCol.id = `tableHeader${attribute}_${type}`
                 else headingCol.id = `tableHeader${attribute}_${idName}`
                 headingRow.appendChild(headingCol)
             }
@@ -1181,10 +1188,10 @@
         makeData: function (attributes, data, type, idName) {
 
             const tbody = document.createElement('tbody')
-            if (type.includes("NJ") || type.includes("CJ")) tbody.id = `tbody_${type}`
+            if (type.includes("NJ") || type.includes("CJ") || type.includes("NLJ")) tbody.id = `tbody_${type}`
             else tbody.id = `tbody_${idName}`
 
-            if ((type == "MC" || (type.includes("NJ")) && data) || (type.includes("CJ")) && data) {
+            if ((type == "MC" || (type.includes("NJ")) && data) || (type.includes("CJ")) && data || (type.includes("NLJ")) && data) {
 
                 for (let [index, row] of data.entries()) {
 
@@ -1192,7 +1199,7 @@
                     for (let attribute of attributes) {
                         const dataCol = document.createElement('td')
                         dataCol.innerHTML = row[attribute]
-                        if (type.includes("NJ") || type.includes("CJ")) dataCol.id = `tableRow${attribute.replace(".", "") + index}_${type}`
+                        if (type.includes("NJ") || type.includes("CJ") || type.includes("NLJ")) dataCol.id = `tableRow${attribute.replace(".", "") + index}_${type}`
                         else dataCol.id = `tableRow${attribute + index}_${idName}`
                         dataRow.appendChild(dataCol)
                     }
@@ -1243,7 +1250,7 @@
 
             let attrAfterJoin
             // for natural joins, we join based on common attributes, so we use a set
-            if (type == "NJ") {
+            if (type == "NJ" || type == "NLJ") {
                 attrAfterJoin = new Set()
                 for (let attr of attr1) attrAfterJoin.add(attr)
                 for (let attr of attr2) attrAfterJoin.add(attr)
@@ -1296,7 +1303,7 @@
 
             let commonAttr = []
             // there shouldn't be any common attributes for cross joins 
-            if (type == "NJ") commonAttr = attr1.filter(attr => attr2.includes(attr))
+            if (type == "NJ" || type == "NLJ") commonAttr = attr1.filter(attr => attr2.includes(attr))
 
             let dataAfterJoin = []
             let indexNew = 0 // number of rows for the joined table (Join3), starts at 0 
@@ -1450,6 +1457,47 @@
 
                         this.pushAnimationToArr()
 
+                        if (type.includes("NLJ")) {
+
+                            let newRow = new Object()
+
+                            attr1.forEach(attr => {
+                                newRow[attr] = value1[attr]
+                                attr = attr.slice(-1) // in original tables, the id's of the elements are still just the attribute, no Table1. and Table2. 
+
+                                // animations, highlights the row when joining 
+                                const table1Value = document.querySelector(`#tableRow${attr.replace(".", "") + index1}_${type}1`)
+                                animationObj = {
+                                    "element": table1Value,
+                                    "animation_name": `fadeIn speedms linear forwards`,
+                                    "animation_event": (e) => this.fadeAnimationEnd(e)
+                                }
+                                this.arrayToPush.push(animationObj)
+                            })
+
+                            attr2.forEach(attr => {
+                                // add to newRow if it's not already in it, adding NULLs to the attributes missing 
+                                if (!(attr in newRow) || commonAttr.length == 0) newRow[attr] = "NULL"
+                            })
+
+                            dataAfterJoin.push(newRow)
+                            this.addRowToTable(tbody, newRow, attrAfterJoin, `${type}3`, indexNew)
+
+                            for (let [key, value] of Object.entries(newRow)) {
+                                const table3Value = document.querySelector(`#tableRow${key.replace(".", "") + indexNew}_${type}3`)
+                                animationObj = {
+                                    "element": table3Value,
+                                    "animation_name": `fadeIn speedms linear forwards`,
+                                    "animation_event": (e) => this.fadeAnimationEnd(e)
+                                }
+                                this.arrayToPush.push(animationObj)
+                            }
+
+                            this.pushAnimationToArr()
+                            indexNew++
+
+                        }
+
                     }
 
                 })
@@ -1486,6 +1534,19 @@
             this.createTable(table1, "NJ1", idName)
             this.createTable(table2, "NJ2", idName)
             this.joinTables(table1, table2, answerTable, "NJ", idName)
+
+        },
+
+        animationNaturalLeftJoin: function (table1, table2, speed, idName) {
+
+            this.animationSpeed = speed
+
+            let answerTable = {}
+
+            this.displayInput([], [], "NaturalLeftJoin", idName)
+            this.createTable(table1, "NLJ1", idName)
+            this.createTable(table2, "NLJ2", idName)
+            this.joinTables(table1, table2, answerTable, "NLJ", idName)
 
         },
 
