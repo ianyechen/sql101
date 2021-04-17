@@ -8,7 +8,7 @@
     <meta nam="viewport" content="width=device-width, initial-scale=1">
 
     <title>SQL 101</title>
-    <link rel="shortcut icon" type="image/jpg" href="images/logo.png"/>
+    <link rel="shortcut icon" type="image/jpg" href="images/logo.png" />
 
     <!-- fonts used from Google fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -27,7 +27,11 @@
 
     <link rel="stylesheet" type="text/css" href="css/getting-started.css">
     <link rel="stylesheet" type="text/css" href="css/animations.css">
-    <link rel="stylesheet" type="text/css" href="css/library.css">
+    <link rel="stylesheet" type="text/css" href="css/common.css">
+
+    <!-- https://dev.to/beumsk/how-to-show-code-in-a-page-prism-code-highlighter-3hcc -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.0/themes/prism.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.5.0/prism.min.js"></script>
 
     <script defer type="text/javascript" src="js/sql101.js"></script>
     <script defer type="text/javascript" src="js/getting-started.js"></script>
@@ -69,23 +73,26 @@
             <h4>CSS</h4>
             <h5>Copy the stylesheet into your HTML file to load the CSS.</h5>
 
-            <div id="code" class="centerText">
-                <pre>
-                    <code>  
+            <div class="centerText">
+                <pre class="code">
+                    <code class="language-html">
     &lt;link rel="stylesheet" type="text/css" href="css/examples_qm.css"&gt;
+    &lt;link rel="stylesheet" type="text/css" href="css/examples_av.css"&gt;
+    &lt;link rel="stylesheet" type="text/css" href="css/common.css"&gt;
                     </code>
                 </pre>
             </div>
 
-            <h5 class="marginBottom" style="margin-top: 2%;"> Note: If you want to use the algorithm
-                visualizations, you would need to include the link for examples_av.css as well.</h5>
+            <h5 class="marginBottom" style="margin-top: 2%;"> Note: You do not have to include the link for the specific
+                functionality if you don't need it. For example, you don't have to include the link for examples_av.css
+                if you are not using any algorithm visualizations.</h5>
 
             <h4>JS</h4>
             <h5>Copy the script into your HTML file to load the JS.</h5>
 
-            <div id="code" class="centerText">
-                <pre>
-                    <code>  
+            <div class="centerText">
+                <pre class="code">
+                    <code class="language-html">
     &lt;script defer type="text/javascript" src="js/sql101.js"&gt;&lt;/script&gt;
                     </code>
                 </pre>
@@ -93,9 +100,9 @@
 
             <h5 style="margin-top: 2%;">Construct the SQL101 object.</h5>
 
-            <div id="code" class="centerText">
-                <pre>
-                    <code>  
+            <div class="centerText">
+                <pre class="code">
+                    <code class="language-js">
     const sql = new SQL101()
                     </code>
                 </pre>
@@ -114,9 +121,9 @@
 
             <h4>HTML</h4>
 
-            <div id="code" class="marginBottom">
-                <pre>
-                    <code>  
+            <div class="marginBottom">
+                <pre class="code">
+                    <code class="language-html">
     &lt;div id="canvas_Example"&gt;&lt;/div&gt;
                     </code>
                 </pre>
@@ -124,9 +131,9 @@
 
             <h4>CSS</h4>
 
-            <div id="code" class="marginBottom">
-                <pre>
-                    <code>  
+            <div class="marginBottom">
+                <pre class="code">
+                    <code class="language-css">
     #canvas_Example {
         background-color: red;
         margin: 5%;
@@ -146,9 +153,9 @@
 
             <h4>JS</h4>
 
-            <div id="code">
-                <pre>
-                    <code>  
+            <div>
+                <pre class="code">
+                    <code class="language-js">
     const sql = new SQL101()
 
     function example() {
@@ -179,6 +186,8 @@
                     </code>
                 </pre>
             </div>
+
+            <h5 style="margin-top: 2%;">IMPORTANT: You must give an element an id of canvas_«id» as that is where elements will be appended to. </h5>
 
         </div>
 
