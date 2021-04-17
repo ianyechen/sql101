@@ -435,6 +435,7 @@
             const pauseButton = document.createElement('button')
             const nextStepButton = document.createElement('button')
             const prevButton = document.createElement('button')
+            const restartButton = document.createElement('button')
 
             const canvas = document.querySelector(`#canvas_${idName}`)
 
@@ -446,6 +447,7 @@
             pauseButton.id = `pauseButton_${idName}`
             nextStepButton.id = `nextStepButton_${idName}`
             prevButton.id = `prevButton_${idName}`
+            restartButton.id = `restartButton_${idName}`
 
             // speedUpButton.classList.add("speedButton")
             // speedDownButton.classList.add("speedButton")
@@ -458,6 +460,7 @@
             pauseButton.innerHTML = "Play All"
             nextStepButton.innerHTML = "Next Step"
             prevButton.innerHTML = "Prev"
+            restartButton.innerHTML = "Restart"
 
             // hiding the play all button 
             pauseButton.style.display = "none"
@@ -466,13 +469,15 @@
             speedDownButton.onclick = () => { this.changeSpeed("slower") }
             pauseButton.onclick = () => { this.toggleAnimationPause(idName) }
             nextStepButton.onclick = () => { this.nextAnimation(type, idName) }
-            prevButton.onclick = () => { this.prevAnimation() }
+            prevButton.onclick = () => { this.prevAnimation(type, idName) }
+            restartButton.onclick = () => { this.restartAnimation(type, idName) }
 
             buttonsDiv.appendChild(speedUpButton)
             buttonsDiv.appendChild(speedDownButton)
+            // buttonsDiv.appendChild(restartButton)
             buttonsDiv.appendChild(pauseButton)
-            buttonsDiv.appendChild(nextStepButton)
             // buttonsDiv.appendChild(prevButton)
+            buttonsDiv.appendChild(nextStepButton)
             inputDiv.appendChild(buttonsDiv)
             canvas.appendChild(inputDiv)
 
@@ -535,45 +540,83 @@
             if (this.animationIndex == this.animationArr.length - 1) nextStepButton.innerHTML = "Replay"
             // to replay the animations, go back and hide every output again
             else if (this.animationIndex == this.animationArr.length) {
-
                 nextStepButton.innerHTML = "Next Step"
-                this.animationIndex = 0
-
-                if (type.includes("Closure")) {
-                    let count = 0
-                    while (document.querySelector(`#closure${count}`)) {
-                        const closure = document.querySelector(`#closure${count}`)
-                        closure.style.opacity = 0
-                        count++
-                    }
-                }
-
-                else if (type.includes("CrossJoin")) {
-                    const tbody = document.querySelector("#tbody_CJ3")
-                    for (let row of tbody.children) {
-                        for (let child of row.children) if (child.tagName == "TD") child.style.opacity = 0
-                    }
-                }
-
-                else if (type.includes("NaturalJoin")) {
-                    const tbody = document.querySelector("#tbody_NJ3")
-                    for (let row of tbody.children) {
-                        for (let child of row.children) if (child.tagName == "TD") child.style.opacity = 0
-                    }
-                }
-
+                this.restartAnimation(type, idName)
                 return
-                
             }
 
             this.doAnimation()
+
         },
 
-        prevAnimation: function () {
-            if (this.animatingArr.length != 0) return
-            // animatingArr.splice(0, animatingArr.length)
+        prevAnimation: function (type, idName) {
+
+            if (this.animatingArr.length != 0 || this.animationIndex == 0) return
+
             this.animationIndex--
+
+            if (type.includes("Closure")) {
+                this.animationArr[this.animationIndex].forEach((animation, count) => {
+                    if (animation["element"].id.includes("closure")) {
+                        const index = this.checkFirstAnimationIndex(animation["element"].id)
+                        if (index == count) animation["element"].style.opacity = 0
+                    }
+                })
+            }
+
+            // else if (type.includes("CrossJoin")) {
+            //     const tbody = document.querySelector("#tbody_CJ3")
+            //     for (let row of tbody.children) {
+            //         for (let child of row.children) if (child.tagName == "TD") child.style.opacity = 0
+            //     }
+            // }
+
+            // else if (type.includes("NaturalJoin")) {
+            //     const tbody = document.querySelector("#tbody_NJ3")
+            //     for (let row of tbody.children) {
+            //         for (let child of row.children) if (child.tagName == "TD") child.style.opacity = 0
+            //     }
+            // }
+
             this.doAnimation()
+            
+        },
+
+        restartAnimation: function (type, idName) {
+
+            this.animationIndex = 0
+
+            if (type.includes("Closure")) {
+                let count = 0
+                while (document.querySelector(`#closure${count}`)) {
+                    const closure = document.querySelector(`#closure${count}`)
+                    closure.style.opacity = 0
+                    count++
+                }
+            }
+
+            else if (type.includes("CrossJoin")) {
+                const tbody = document.querySelector("#tbody_CJ3")
+                for (let row of tbody.children) {
+                    for (let child of row.children) if (child.tagName == "TD") child.style.opacity = 0
+                }
+            }
+
+            else if (type.includes("NaturalJoin")) {
+                const tbody = document.querySelector("#tbody_NJ3")
+                for (let row of tbody.children) {
+                    for (let child of row.children) if (child.tagName == "TD") child.style.opacity = 0
+                }
+            }
+
+        },
+
+        checkFirstAnimationIndex: function (id) {
+            for (let i = 0; i < this.animationArr.length; i++) {
+                for (let j = 0; j < this.animationArr[i].length; j++) {
+                    if (this.animationArr[i][j]["element"].id == id) return i
+                }
+            }
         },
 
         doAnimation: function () {
