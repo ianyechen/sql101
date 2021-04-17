@@ -607,7 +607,7 @@
             answerDiv.id = `answerDiv_${idName}`
 
             const instructionsDiv = document.createElement('div')
-            instructionsDiv.innerHTML = "<h3>Please choose the best answer for each question.</h3>"
+            instructionsDiv.innerHTML = `<h3>${problems[this.quizIndex]["instruction"]}</h3>`
             instructionsDiv.id = `instructionsDiv_${idName}`
 
             const questionDiv = document.createElement('div')
@@ -838,6 +838,8 @@
 
         changeQuestion: function (problems, type, attr, idName, options) {
 
+            const instructionsDiv = document.querySelector(`#instructionsDiv_${idName}`)
+            instructionsDiv.innerHTML = `<h3>${problems[this.quizIndex]["instruction"]}</h3>`
             const questionDiv = document.querySelector(`#questionDiv_${idName}`)
             questionDiv.innerHTML = `<p>${problems[this.quizIndex]["question"]}</p>`
 
