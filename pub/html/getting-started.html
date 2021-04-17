@@ -11,7 +11,7 @@
 
     <!-- fonts used from Google fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
 
     <!-- change href path when deploying to heroku -->
     <!-- <link rel="stylesheet" type="text/css" href="pub/css/library.css">
@@ -24,12 +24,12 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
 
-        <link rel="stylesheet" type="text/css" href="css/library.css">
-        <link rel="stylesheet" type="text/css" href="css/examples_qm.css">
-        <link rel="stylesheet" type="text/css" href="css/animations.css">
+    <link rel="stylesheet" type="text/css" href="css/getting-started.css">
+    <link rel="stylesheet" type="text/css" href="css/animations.css">
+    <link rel="stylesheet" type="text/css" href="css/library.css">
 
     <script defer type="text/javascript" src="js/sql101.js"></script>
-    <script defer type="text/javascript" src="js/examples_qm.js"></script>
+    <script defer type="text/javascript" src="js/getting-started.js"></script>
 
 </head>
 
@@ -38,17 +38,18 @@
     <!-- navigation bar -->
     <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #5680e9; font-size: larger;">
         <div class="container-fluid">
-            <a class="navbar-brand" href="home.html" style="font-size: x-large;">SQL101</a>
+            <a class="navbar-brand" href="home.html"
+                style="font-size: x-large; color: white"><strong>SQL101</strong></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
                 aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
-                    <a class="nav-link" href="examples_qm.html">Quiz Maker</a>
-                    <a class="nav-link" href="examples_av.html">Algorithm Visualization</a>
-                    <a class="nav-link" href="getting-started.html">Getting Started</a>
-                    <a class="nav-link" href="api.html">API</a>
+                    <a class="nav-link" href="examples_qm.html" style="color: white">Quiz Maker</a>
+                    <a class="nav-link" href="examples_av.html" style="color: white">Algorithm Visualization</a>
+                    <a class="nav-link" href="getting-started.html" style="color: white">Getting Started</a>
+                    <a class="nav-link" href="api.html" style="color: white">API</a>
                 </div>
             </div>
         </div>
@@ -58,7 +59,117 @@
 
     <div id="body">
 
-        <h2>Getting Started</h2>
+        <h2><strong>Getting Started</strong></h2>
+        <h5 class="marginBottom">It is very simple to get set up with SQL101. Follow the instructions below and start
+            being creative!</h5>
+
+        <div class="canvas">
+
+            <h4>CSS</h4>
+            <h5>Copy the stylesheet into your HTML file to load the CSS.</h5>
+
+            <div id="code" class="centerText">
+                <pre>
+                    <code>  
+    &lt;link rel="stylesheet" type="text/css" href="css/examples_qm.css"&gt;
+                    </code>
+                </pre>
+            </div>
+
+            <h5 class="marginBottom" style="margin-top: 2%;"> Note: If you want to use the algorithm
+                visualizations, you would need to include the link for examples_av.css as well.</h5>
+
+            <h4>JS</h4>
+            <h5>Copy the script into your HTML file to load the JS.</h5>
+
+            <div id="code" class="centerText">
+                <pre>
+                    <code>  
+    &lt;script defer type="text/javascript" src="js/sql101.js"&gt;&lt;/script&gt;
+                    </code>
+                </pre>
+            </div>
+
+        </div>
+
+        <hr>
+
+        <h2><strong>Example</strong></h2>
+        <h5 class="marginBottom">Here we show an example of how to create a table using SQL101.</h5>
+
+        <!-- <div id="canvas_Example" class="canvas"></div> -->
+
+        <div class="canvas">
+
+            <h4>HTML</h4>
+
+            <div id="code" class="marginBottom">
+                <pre>
+                    <code>  
+    &lt;div id="canvas_Example"&gt;&lt;/div&gt;
+                    </code>
+                </pre>
+            </div>
+
+            <h4>CSS</h4>
+
+            <div id="code" class="marginBottom">
+                <pre>
+                    <code>  
+    #canvas_Example {
+        background-color: red;
+        margin: 5%;
+    }
+
+    #tableMC_Example {
+        width: 80%;
+        margin: 0 25% 0 25%;
+        border: 1px solid blue;
+        border-collapse: collapse;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+        text-align: center;
+    }
+                    </code>
+                </pre>
+            </div>
+
+            <h4>JS</h4>
+
+            <div id="code">
+                <pre>
+                    <code>  
+    const sql = new SQL101()
+
+    function example() {
+    
+        const table = {
+            "attributes": ["sID", "oID", "grade"],
+            "data": [
+                { "sID": 1, "oID": 2, "grade": 85 },
+                { "sID": 1, "oID": 3, "grade": 30 },
+                { "sID": 2, "oID": 3, "grade": 47 },
+                { "sID": 2, "oID": 4, "grade": 68 },
+                { "sID": 3, "oID": 4, "grade": 95 },
+                { "sID": 4, "oID": 4, "grade": 34 },
+                { "sID": 4, "oID": 5, "grade": 68 },
+                { "sID": 5, "oID": 6, "grade": 64 },
+                { "sID": 6, "oID": 6, "grade": 86 },
+                { "sID": 7, "oID": 7, "grade": 94 },
+                { "sID": 8, "oID": 9, "grade": 36 },
+                { "sID": 9, "oID": 10, "grade": 44 },
+            ]
+        }
+    
+        sql.createTable(table, "MC", "Example")
+    
+    }
+    
+    example()
+                    </code>
+                </pre>
+            </div>
+
+        </div>
 
     </div>
 

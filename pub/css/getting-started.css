@@ -1,0 +1,10 @@
+#code {
+    background-color: rgb(230, 230, 230);
+    border-radius: 45px;
+    background: rgb(230, 230, 230);
+    border: 1px solid black;
+}
+
+.centerText {
+    text-align: center;
+}
