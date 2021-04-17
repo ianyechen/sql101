@@ -1,50 +1,66 @@
 #logoDiv {
-    width: 50%;
-    float: left;
-    height: 80vh;
-    margin-top: 10vh;
-    margin-bottom: 10vh;
+    margin-top: 8vh;
 }
 
 #tableDiv {
-    width: 50%;
-    float: right;
     height: 40vh;
-    margin-top: 28vh;
-    margin-bottom: 28vh;
-    margin-right: 0;
-    margin-left: 0;
+    margin-top: 2%;
 }
 
 #logoImg {
-    width: 50%;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
+    width: 5%;
+    position: absolute;
+    top: 2%;
+    left: 1%;
 }
 
 #logoText {
     text-align: center;
-    font-family: 'Noto Sans', sans-serif;
     font-size: 100px;
-    margin-top: 0;
+    color: white;
 }
 
 #tableHome {
-    width: 50%;
-    margin: 0 35% 0 15%;
     border: 1px solid black;
     border-collapse: collapse;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
     text-align: center;
     font-size: 3vh;
     min-width: 10vw;
+    background-color: white;
+    margin: 0 auto;
 }
 
 #tableHome tr {
     height: 10vh;
 }
 
+#tableHome tbody tr {
+    background-color: white;
+}
+
 #tableHome th, #tableHome td {
-    min-width: 10vw;
+    min-width: 15vw;
+}
+
+#description {
+    max-width: 70%;
+    margin: 0 auto;
+    text-align: center;
+    margin-top: 2%;
+}
+
+#githubIcon {
+    position: absolute;
+    top: 2%;
+    right: 1%;
+    color: black;
+}
+
+#footer {
+    position: absolute;
+    bottom: 1%;
+    right: 1%;
+    width: 100%;
+    text-align: right;
 }
