@@ -1,6 +1,7 @@
 # SQL101
 A Javascript library that allows developers to create dynamic animations for SQL algorithms and interactive quizzes for SQL topics.
 [Check it out now!](https://sql101.herokuapp.com/)  
+Link to landing page: https://sql101.herokuapp.com/
 
 ## Get Started 
 It is very simple to get set up with SQL101. Follow the instructions below and start being creative!
@@ -82,3 +83,4 @@ example()
 
 ## Documentation 
 [See a more detailed documentation!](https://sql101.herokuapp.com/api.html)  
+Link to documentation: https://sql101.herokuapp.com/api.html
