@@ -997,7 +997,8 @@
             }
             // if incorrect answer 
             else if (data["choice"] != answer) {
-                feedbackDiv.innerHTML = "Incorrect answer. Please try again!"
+                if (options.includes("marks")) feedbackDiv.innerHTML = "Incorrect answer :("
+                else feedbackDiv.innerHTML = "Incorrect answer. Please try again!"
                 feedbackDiv.classList.remove('feedback-correct')
                 feedbackDiv.classList.add('feedback-incorrect')
             }
@@ -1099,7 +1100,8 @@
             }
 
             else {
-                feedbackDiv.innerHTML = "Incorrect answer. Please try again!"
+                if (options.includes("marks")) feedbackDiv.innerHTML = "Incorrect answer :("
+                else feedbackDiv.innerHTML = "Incorrect answer. Please try again!"
                 feedbackDiv.classList.remove('feedback-correct')
                 feedbackDiv.classList.add('feedback-incorrect')
             }
